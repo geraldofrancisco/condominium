@@ -1,0 +1,5 @@
+spring:
+  data:
+    mongodb:
+      uri: mongodb+srv://condominium:62DC9G8V4RlAwqOX@condominium.qfgszpm.mongodb.net/condominio
+      database: condominio
