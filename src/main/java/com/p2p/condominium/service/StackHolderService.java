@@ -8,6 +8,7 @@ import reactor.core.publisher.Mono;
 
 public interface StackHolderService {
     Mono<StackHolderDocument> insert(StackHolderDTO dto);
+
     Mono<StackHolderDocument> findById(String id);
 
     Mono<PaginatedResponse> findAll(Pageable pageable);

@@ -6,6 +6,7 @@ import com.p2p.condominium.dto.StackHolderDTO;
 import com.p2p.condominium.service.StackHolderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,6 +35,13 @@ public class StackHolderController {
             @RequestParam(name = "size", defaultValue = DEFAULT_SIZE, required = false) int size
     ) {
         return this.service.findAll(of(page, size));
+    }
+
+    @GetMapping("/{id}")
+    @ResponseStatus(OK)
+    public Mono<StackHolderDTO> getById(@PathVariable String id) {
+        return this.service.findById(id)
+                .map(StackHolderBuilder::toDTO);
     }
 
     @PostMapping
