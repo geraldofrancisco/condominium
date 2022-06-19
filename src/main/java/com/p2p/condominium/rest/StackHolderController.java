@@ -1,12 +1,10 @@
 package com.p2p.condominium.rest;
 
 import com.p2p.condominium.builder.StackHolderBuilder;
-import com.p2p.condominium.document.StackHolderDocument;
-import com.p2p.condominium.dto.PaginatorResponse;
+import com.p2p.condominium.dto.PaginatedResponse;
 import com.p2p.condominium.dto.StackHolderDTO;
 import com.p2p.condominium.service.StackHolderService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import static com.p2p.condominium.constant.ControllerConstant.DEFAULT_PAGE;
@@ -32,7 +29,7 @@ public class StackHolderController {
 
     @GetMapping
     @ResponseStatus(OK)
-    public Mono<PaginatorResponse> list(
+    public Mono<PaginatedResponse> list(
             @RequestParam(name = "page", defaultValue = DEFAULT_PAGE, required = false) int page,
             @RequestParam(name = "size", defaultValue = DEFAULT_SIZE, required = false) int size
     ) {
