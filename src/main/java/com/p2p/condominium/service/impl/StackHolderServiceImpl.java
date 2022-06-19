@@ -4,7 +4,7 @@ import com.p2p.condominium.builder.PaginatorResponseBuider;
 import com.p2p.condominium.builder.StackHolderBuilder;
 import com.p2p.condominium.document.StackHolderDocument;
 import com.p2p.condominium.dto.PaginatedResponse;
-import com.p2p.condominium.dto.StackHolderDTO;
+import com.p2p.condominium.dto.StackHolderInsertRequest;
 import com.p2p.condominium.exception.BusinessException;
 import com.p2p.condominium.repository.StackHolderRepository;
 import com.p2p.condominium.service.StackHolderService;
@@ -22,9 +22,9 @@ public class StackHolderServiceImpl implements StackHolderService {
     private StackHolderRepository repository;
 
     @Override
-    public Mono<StackHolderDocument> insert(StackHolderDTO dto) {
-        var entity = StackHolderBuilder.toDocument(dto);
-        return this.repository.save(entity);
+    public Mono<StackHolderDocument> insert(StackHolderInsertRequest dto) {
+        return this.repository.findByIdentification(dto.getIdentification())
+                .switchIfEmpty(this.repository.save(StackHolderBuilder.toDocument(dto)));
     }
 
     @Override
@@ -39,7 +39,7 @@ public class StackHolderServiceImpl implements StackHolderService {
             this.repository.findByIdNotNullOrderByNameAsc(pageable)
                     .collectList()
                     .flatMap(list -> Mono.just(PaginatorResponseBuider
-                            .toPaginator(list, pageable.getPageNumber(), pageable.getPageSize(), total)))
+                            .toPaginator(StackHolderBuilder.toResponse(list), pageable.getPageNumber(), pageable.getPageSize(), total)))
         );
 
     }

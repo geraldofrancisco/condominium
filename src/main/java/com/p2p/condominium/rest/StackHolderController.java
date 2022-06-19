@@ -2,9 +2,13 @@ package com.p2p.condominium.rest;
 
 import com.p2p.condominium.builder.StackHolderBuilder;
 import com.p2p.condominium.dto.PaginatedResponse;
-import com.p2p.condominium.dto.StackHolderDTO;
+import com.p2p.condominium.dto.StackHolderResponse;
+import com.p2p.condominium.dto.StackHolderInsertRequest;
+import com.p2p.condominium.exception.BusinessException;
 import com.p2p.condominium.service.StackHolderService;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,8 +19,11 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
+import javax.validation.Valid;
+
 import static com.p2p.condominium.constant.ControllerConstant.DEFAULT_PAGE;
 import static com.p2p.condominium.constant.ControllerConstant.DEFAULT_SIZE;
+import static com.p2p.condominium.constant.ErrorConstant.CNPJ_OR_CPF_REQUIRED;
 import static org.springframework.data.domain.PageRequest.of;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
@@ -24,6 +31,7 @@ import static org.springframework.http.HttpStatus.OK;
 @RestController
 @RequestMapping("/v1/stack-holder")
 @RequiredArgsConstructor
+@Validated
 public class StackHolderController {
 
     private final StackHolderService service;
@@ -39,15 +47,18 @@ public class StackHolderController {
 
     @GetMapping("/{id}")
     @ResponseStatus(OK)
-    public Mono<StackHolderDTO> getById(@PathVariable String id) {
+    public Mono<StackHolderResponse> getById(@PathVariable String id) {
         return this.service.findById(id)
-                .map(StackHolderBuilder::toDTO);
+                .map(StackHolderBuilder::toResponse);
     }
 
     @PostMapping
     @ResponseStatus(CREATED)
-    public Mono<StackHolderDTO> insert(@RequestBody StackHolderDTO request) {
+    public Mono<StackHolderResponse> insert(@Valid @RequestBody StackHolderInsertRequest request) {
+        if(StringUtils.isBlank(request.getCpf()) && StringUtils.isBlank(request.getCnpj()))
+            return Mono.error(new BusinessException(CNPJ_OR_CPF_REQUIRED));
+
         return service.insert(request)
-                .map(StackHolderBuilder::toDTO);
+                .map(StackHolderBuilder::toResponse);
     }
 }

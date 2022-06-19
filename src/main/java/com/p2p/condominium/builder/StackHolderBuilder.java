@@ -1,14 +1,10 @@
 package com.p2p.condominium.builder;
 
 import com.p2p.condominium.document.StackHolderDocument;
-import com.p2p.condominium.dto.StackHolderDTO;
+import com.p2p.condominium.dto.StackHolderResponse;
+import com.p2p.condominium.dto.StackHolderInsertRequest;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +12,7 @@ import java.util.stream.Collectors;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class StackHolderBuilder {
-    public static final StackHolderDocument toDocument(StackHolderDTO dto) {
+    public static final StackHolderDocument toDocument(StackHolderResponse dto) {
         return StackHolderDocument.builder()
                 .email(dto.getEmail())
                 .id(dto.getId())
@@ -26,14 +22,23 @@ public class StackHolderBuilder {
                 .build();
     }
 
-
-
-    public static final List<StackHolderDTO> toDTO(List<StackHolderDocument> list) {
-        return new ArrayList<>();
+    public static final StackHolderDocument toDocument(StackHolderInsertRequest dto) {
+        return StackHolderDocument.builder()
+                .email(dto.getEmail())
+                .name(dto.getName())
+                .identification(dto.getIdentification())
+                .phones(PhoneBuilder.toDocument(dto.getPhones()))
+                .build();
     }
 
-    public static final StackHolderDTO toDTO(StackHolderDocument document) {
-        return StackHolderDTO.builder()
+
+
+    public static final List<StackHolderResponse> toResponse(List<StackHolderDocument> list) {
+        return list.stream().map(StackHolderBuilder::toResponse).collect(Collectors.toList());
+    }
+
+    public static final StackHolderResponse toResponse(StackHolderDocument document) {
+        return StackHolderResponse.builder()
                 .id(document.getId())
                 .email(document.getEmail())
                 .name(document.getName())
