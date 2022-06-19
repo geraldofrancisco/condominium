@@ -1,7 +1,9 @@
 package com.p2p.condominium.service.impl;
 
+import com.p2p.condominium.builder.PaginatorResponseBuider;
 import com.p2p.condominium.builder.StackHolderBuilder;
 import com.p2p.condominium.document.StackHolderDocument;
+import com.p2p.condominium.dto.PaginatorResponse;
 import com.p2p.condominium.dto.StackHolderDTO;
 import com.p2p.condominium.repository.StackHolderRepository;
 import com.p2p.condominium.service.StackHolderService;
@@ -29,9 +31,12 @@ public class StackHolderServiceImpl implements StackHolderService {
     }
 
     @Override
-    public Flux<StackHolderDocument> findAll(Pageable pageable) {
-        //return Mono.just(this.repository.findAll(pageable))
-          //      .map(p -> StackHolderBuilder.toDTO(p, pageable));
-        return this.repository.findByIdNotNullOrderByNameAsc(pageable);
+    public Mono<PaginatorResponse> findAll(Pageable pageable) {
+        return this.repository.count().flatMap(total ->
+            this.repository.findByIdNotNullOrderByNameAsc(pageable)
+                    .collectList()
+                    .flatMap(list -> Mono.just(PaginatorResponseBuider.toPaginator(list, pageable.getPageNumber(), pageable.getPageSize(), total)))
+        );
+
     }
 }

@@ -2,6 +2,7 @@ package com.p2p.condominium.rest;
 
 import com.p2p.condominium.builder.StackHolderBuilder;
 import com.p2p.condominium.document.StackHolderDocument;
+import com.p2p.condominium.dto.PaginatorResponse;
 import com.p2p.condominium.dto.StackHolderDTO;
 import com.p2p.condominium.service.StackHolderService;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +32,7 @@ public class StackHolderController {
 
     @GetMapping
     @ResponseStatus(OK)
-    public Flux<StackHolderDocument> list(
+    public Mono<PaginatorResponse> list(
             @RequestParam(name = "page", defaultValue = DEFAULT_PAGE, required = false) int page,
             @RequestParam(name = "size", defaultValue = DEFAULT_SIZE, required = false) int size
     ) {
