@@ -10,10 +10,12 @@ import com.p2p.condominium.repository.StackHolderRepository;
 import com.p2p.condominium.service.StackHolderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
 import static com.p2p.condominium.constant.ErrorConstant.ID_NOT_EXIST;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Service
 public class StackHolderServiceImpl implements StackHolderService {
@@ -30,7 +32,7 @@ public class StackHolderServiceImpl implements StackHolderService {
     @Override
     public Mono<StackHolderDocument> findById(String id) {
         return this.repository.findById(id)
-                .switchIfEmpty(Mono.error(new BusinessException(ID_NOT_EXIST)));
+                .switchIfEmpty(Mono.error(new BusinessException(ID_NOT_EXIST, NOT_FOUND)));
     }
 
     @Override

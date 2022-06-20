@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Builder
 @Data
-public class PhoneDTO {
+public class Phone {
     private Integer code;
     private Integer number;
     private Boolean active;

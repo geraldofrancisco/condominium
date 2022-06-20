@@ -1,11 +1,11 @@
 package com.p2p.condominium.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.p2p.condominium.enums.TypePerson;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.constraints.br.CNPJ;
 import org.hibernate.validator.constraints.br.CPF;
@@ -33,7 +33,7 @@ public class StackHolderInsertRequest {
     @JsonIgnore
     private String identification;
 
-    private List<PhoneDTO> phones;
+    private List<Phone> phones;
 
     public String getIdentification() {
         return this.getCpf() != null ? this.getCpf() : this.getCnpj();
@@ -45,6 +45,10 @@ public class StackHolderInsertRequest {
 
     public String getCnpj() {
         return removeSpecialCharacters(cnpj);
+    }
+
+    public TypePerson getTypePerson() {
+        return this.cpf != null ? TypePerson.FISICA : TypePerson.JURIDICA;
     }
 
     private String removeSpecialCharacters(String string) {

@@ -1,5 +1,6 @@
 package com.p2p.condominium.document;
 
+import com.p2p.condominium.enums.TypePerson;
 import lombok.Builder;
 import lombok.Data;
 import lombok.ToString;
@@ -24,6 +25,9 @@ public class StackHolderDocument {
     private String name;
 
     private String email;
+
+    @Field(name = "tipoPessoa")
+    private TypePerson typePerson;
 
     @Field(name = "telefones")
     private List<PhoneDocument> phones;

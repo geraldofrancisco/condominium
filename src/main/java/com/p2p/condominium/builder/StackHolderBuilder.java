@@ -12,21 +12,12 @@ import java.util.stream.Collectors;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class StackHolderBuilder {
-    public static final StackHolderDocument toDocument(StackHolderResponse dto) {
-        return StackHolderDocument.builder()
-                .email(dto.getEmail())
-                .id(dto.getId())
-                .name(dto.getName())
-                .identification(dto.getIdentification())
-                .phones(PhoneBuilder.toDocument(dto.getPhones()))
-                .build();
-    }
-
     public static final StackHolderDocument toDocument(StackHolderInsertRequest dto) {
         return StackHolderDocument.builder()
                 .email(dto.getEmail())
                 .name(dto.getName())
                 .identification(dto.getIdentification())
+                .typePerson(dto.getTypePerson())
                 .phones(PhoneBuilder.toDocument(dto.getPhones()))
                 .build();
     }
@@ -43,6 +34,7 @@ public class StackHolderBuilder {
                 .email(document.getEmail())
                 .name(document.getName())
                 .identification(document.getIdentification())
+                .typePerson(document.getTypePerson())
                 .phones(PhoneBuilder.toDTO(document.getPhones()))
                 .build();
     }
