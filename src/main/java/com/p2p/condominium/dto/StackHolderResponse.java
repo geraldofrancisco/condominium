@@ -1,6 +1,6 @@
 package com.p2p.condominium.dto;
 
-import com.p2p.condominium.enums.TypePerson;
+import com.p2p.condominium.enums.TypePersonEnum;
 import lombok.Builder;
 import lombok.Data;
 
@@ -14,5 +14,6 @@ public class StackHolderResponse {
     private String name;
     private String email;
     private List<Phone> phones;
-    private TypePerson typePerson;
+    private TypePersonEnum typePersonEnum;
+    private Address address;
 }

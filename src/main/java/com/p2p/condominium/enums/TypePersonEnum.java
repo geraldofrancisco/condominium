@@ -1,5 +1,5 @@
 package com.p2p.condominium.enums;
 
-public enum TypePerson {
+public enum TypePersonEnum {
     FISICA, JURIDICA
 }

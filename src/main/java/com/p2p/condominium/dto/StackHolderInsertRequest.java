@@ -1,7 +1,7 @@
 package com.p2p.condominium.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.p2p.condominium.enums.TypePerson;
+import com.p2p.condominium.enums.TypePersonEnum;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -35,6 +35,8 @@ public class StackHolderInsertRequest {
 
     private List<Phone> phones;
 
+    private Address address;
+
     public String getIdentification() {
         return this.getCpf() != null ? this.getCpf() : this.getCnpj();
     }
@@ -47,8 +49,8 @@ public class StackHolderInsertRequest {
         return removeSpecialCharacters(cnpj);
     }
 
-    public TypePerson getTypePerson() {
-        return this.cpf != null ? TypePerson.FISICA : TypePerson.JURIDICA;
+    public TypePersonEnum getTypePerson() {
+        return this.cpf != null ? TypePersonEnum.FISICA : TypePersonEnum.JURIDICA;
     }
 
     private String removeSpecialCharacters(String string) {

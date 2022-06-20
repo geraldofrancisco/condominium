@@ -1,6 +1,6 @@
 package com.p2p.condominium.document;
 
-import com.p2p.condominium.enums.TypePerson;
+import com.p2p.condominium.enums.TypePersonEnum;
 import lombok.Builder;
 import lombok.Data;
 import lombok.ToString;
@@ -18,17 +18,20 @@ public class StackHolderDocument {
     @Id
     private String id;
 
-    @Field(name = "identificacao")
+    @Field("identificacao")
     private String identification;
 
-    @Field(name = "nome")
+    @Field("nome")
     private String name;
 
     private String email;
 
-    @Field(name = "tipoPessoa")
-    private TypePerson typePerson;
+    @Field("tipoPessoa")
+    private TypePersonEnum typePersonEnum;
 
-    @Field(name = "telefones")
+    @Field("endereco")
+    private AddressDocument address;
+
+    @Field("telefones")
     private List<PhoneDocument> phones;
 }

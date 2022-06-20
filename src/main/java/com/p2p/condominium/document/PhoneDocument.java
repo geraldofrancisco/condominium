@@ -7,12 +7,12 @@ import org.springframework.data.mongodb.core.mapping.Field;
 @Data
 @Builder
 public class PhoneDocument {
-    @Field(name = "ddd")
+    @Field("ddd")
     private Integer code;
 
-    @Field(name = "numero")
+    @Field("numero")
     private Integer number;
 
-    @Field(name = "ativo")
+    @Field("ativo")
     private Boolean active;
 }

@@ -13,12 +13,12 @@ public class PaginatedResponse {
     Integer size;
     Long totalRecords;
 
-    public Long getNumberOfPages() {
+    public Long getMaxPage() {
         var last = totalRecords / size;
         return last > 0 ? last - 1L : 0;
     }
 
     public Boolean isLast() {
-        return page >= getNumberOfPages();
+        return page >= getMaxPage();
     }
 }

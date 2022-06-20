@@ -2,13 +2,14 @@ package com.p2p.condominium.builder;
 
 import com.p2p.condominium.document.PhoneDocument;
 import com.p2p.condominium.dto.Phone;
-import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+import static lombok.AccessLevel.PRIVATE;
+
+@NoArgsConstructor(access = PRIVATE)
 public class PhoneBuilder {
     public static final List<PhoneDocument> toDocument(List<Phone> list) {
         if(list == null)
@@ -18,6 +19,9 @@ public class PhoneBuilder {
     }
 
     private static final PhoneDocument toDocument(Phone dto) {
+        if(dto == null)
+            return null;
+
         return PhoneDocument.builder()
                 .active(dto.getActive())
                 .code(dto.getCode())
@@ -33,6 +37,9 @@ public class PhoneBuilder {
     }
 
     private static final Phone toDTO(PhoneDocument document) {
+        if(document == null)
+            return null;
+
         return Phone.builder()
                 .active(document.getActive())
                 .code(document.getCode())
