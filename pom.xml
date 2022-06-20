@@ -15,6 +15,7 @@
 	<description>Projeto para controle de condomínios</description>
 	<properties>
 		<java.version>11</java.version>
+		<apache-commons.version>3.12.0</apache-commons.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -44,6 +45,21 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>org.mockito</groupId>
+					<artifactId>mockito-junit-jupiter</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.junit.jupter</groupId>
+					<artifactId>junit-jupter</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>io.projectreactor</groupId>
@@ -53,8 +69,9 @@
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
-			<version>3.12.0</version>
+			<version>${apache-commons.version}</version>
 		</dependency>
+
 
 	</dependencies>
 
