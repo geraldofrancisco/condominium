@@ -3,7 +3,6 @@ package com.p2p.condominium.exception;
 import com.p2p.condominium.dto.ExceptionResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.server.ServerHttpRequest;
 import reactor.core.publisher.Mono;
 
 public abstract class CondominiumExceptionHandler {

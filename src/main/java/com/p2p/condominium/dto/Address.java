@@ -3,7 +3,6 @@ package com.p2p.condominium.dto;
 import com.p2p.condominium.enums.StateEnum;
 import lombok.Builder;
 import lombok.Data;
-import org.springframework.data.mongodb.core.mapping.Field;
 
 @Builder
 @Data
