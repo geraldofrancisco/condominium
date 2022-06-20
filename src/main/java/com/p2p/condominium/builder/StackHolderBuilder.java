@@ -3,6 +3,7 @@ package com.p2p.condominium.builder;
 import com.p2p.condominium.document.StackHolderDocument;
 import com.p2p.condominium.dto.StackHolderInsertRequest;
 import com.p2p.condominium.dto.StackHolderResponse;
+import com.p2p.condominium.dto.StackHolderUpdateRequest;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
@@ -23,7 +24,17 @@ public class StackHolderBuilder {
                 .build();
     }
 
-
+    public static final StackHolderDocument toDocument(StackHolderUpdateRequest dto) {
+        return StackHolderDocument.builder()
+                .id(dto.getId())
+                .email(dto.getEmail())
+                .name(dto.getName())
+                .identification(dto.getIdentification())
+                .typePersonEnum(dto.getTypePerson())
+                .phones(PhoneBuilder.toDocument(dto.getPhones()))
+                .address(AddressBuilder.toDocument(dto.getAddress()))
+                .build();
+    }
 
     public static final List<StackHolderResponse> toResponse(List<StackHolderDocument> list) {
         return list.stream().map(StackHolderBuilder::toResponse).collect(Collectors.toList());

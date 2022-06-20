@@ -4,6 +4,7 @@ import com.p2p.condominium.builder.StackHolderBuilder;
 import com.p2p.condominium.dto.PaginatedResponse;
 import com.p2p.condominium.dto.StackHolderResponse;
 import com.p2p.condominium.dto.StackHolderInsertRequest;
+import com.p2p.condominium.dto.StackHolderUpdateRequest;
 import com.p2p.condominium.exception.BusinessException;
 import com.p2p.condominium.service.StackHolderService;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,7 @@ import static com.p2p.condominium.constant.ControllerConstant.DEFAULT_PAGE;
 import static com.p2p.condominium.constant.ControllerConstant.DEFAULT_SIZE;
 import static com.p2p.condominium.constant.ErrorConstant.CNPJ_OR_CPF_REQUIRED;
 import static org.springframework.data.domain.PageRequest.of;
+import static org.springframework.http.HttpStatus.ACCEPTED;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -64,5 +66,10 @@ public class StackHolderController {
                 .map(StackHolderBuilder::toResponse);
     }
 
-
+    @PutMapping
+    @ResponseStatus(ACCEPTED)
+    public Mono<StackHolderResponse> update(@Valid @RequestBody StackHolderUpdateRequest request) {
+        return service.update(request)
+                .map(StackHolderBuilder::toResponse);
+    }
 }
