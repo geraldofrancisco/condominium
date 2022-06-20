@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,6 +31,7 @@ import static com.p2p.condominium.constant.ErrorConstant.CNPJ_OR_CPF_REQUIRED;
 import static org.springframework.data.domain.PageRequest.of;
 import static org.springframework.http.HttpStatus.ACCEPTED;
 import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
 
 @RestController
@@ -71,5 +73,11 @@ public class StackHolderController {
     public Mono<StackHolderResponse> update(@Valid @RequestBody StackHolderUpdateRequest request) {
         return service.update(request)
                 .map(StackHolderBuilder::toResponse);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(NO_CONTENT)
+    public Mono<Void> delete(@PathVariable String id) {
+        return service.delete(id);
     }
 }

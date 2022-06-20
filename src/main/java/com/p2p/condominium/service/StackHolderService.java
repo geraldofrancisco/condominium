@@ -12,6 +12,8 @@ public interface StackHolderService {
 
     Mono<StackHolderDocument> update(StackHolderUpdateRequest dto);
 
+    Mono<Void> delete(String id);
+
     Mono<StackHolderDocument> findById(String id);
 
     Mono<PaginatedResponse> findAll(Pageable pageable);

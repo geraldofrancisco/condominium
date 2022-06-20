@@ -10,8 +10,6 @@ import com.p2p.condominium.exception.BusinessException;
 import com.p2p.condominium.repository.StackHolderRepository;
 import com.p2p.condominium.service.StackHolderService;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
@@ -35,6 +33,12 @@ public class StackHolderServiceImpl implements StackHolderService {
     public Mono<StackHolderDocument> update(StackHolderUpdateRequest dto) {
         return findById(dto.getId())
                 .flatMap(sh -> this.repository.save(StackHolderBuilder.toDocument(dto)));
+    }
+
+    @Override
+    public Mono<Void> delete(String id) {
+        return findById(id)
+                .flatMap(sh -> this.repository.delete(sh));
     }
 
     @Override
