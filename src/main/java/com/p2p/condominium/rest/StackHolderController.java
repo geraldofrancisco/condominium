@@ -2,14 +2,13 @@ package com.p2p.condominium.rest;
 
 import com.p2p.condominium.builder.StackHolderBuilder;
 import com.p2p.condominium.dto.PaginatedResponse;
-import com.p2p.condominium.dto.StackHolderResponse;
 import com.p2p.condominium.dto.StackHolderInsertRequest;
+import com.p2p.condominium.dto.StackHolderResponse;
 import com.p2p.condominium.dto.StackHolderUpdateRequest;
 import com.p2p.condominium.exception.BusinessException;
 import com.p2p.condominium.service.StackHolderService;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
