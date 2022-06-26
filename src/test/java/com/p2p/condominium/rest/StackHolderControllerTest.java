@@ -6,7 +6,6 @@ import com.p2p.condominium.document.StackHolderDocument;
 import com.p2p.condominium.dto.PaginatedResponse;
 import com.p2p.condominium.dto.StackHolderInsertRequest;
 import com.p2p.condominium.dto.StackHolderUpdateRequest;
-import com.p2p.condominium.exception.BusinessException;
 import com.p2p.condominium.exception.BusinessExceptionHandler;
 import com.p2p.condominium.repository.StackHolderRepository;
 import com.p2p.condominium.service.StackHolderService;
@@ -30,8 +29,10 @@ import static com.p2p.condominium.constant.ErrorConstant.REQUEST_EMAIL_REQUIRED;
 import static com.p2p.condominium.constant.ErrorConstant.REQUEST_ID_REQUIRED;
 import static com.p2p.condominium.constant.ErrorConstant.REQUEST_NAME_REQUIRED;
 import static com.p2p.condominium.enums.TypePersonEnum.FISICA;
+import static java.util.UUID.randomUUID;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
@@ -68,7 +69,7 @@ public class StackHolderControllerTest extends UnitTest {
     public void getByIdSuccessTest() {
         when(service.findById(any())).thenReturn(Mono.just(getResponse().build()));
         this.client.get()
-                .uri(STACKHOLDER_URL_ID, UUID.randomUUID().toString())
+                .uri(STACKHOLDER_URL_ID, randomUUID().toString())
                 .exchange()
                 .expectStatus()
                 .isOk();
@@ -129,6 +130,16 @@ public class StackHolderControllerTest extends UnitTest {
     }
 
     @Test
+    public void deleteSuccessTest() {
+        when(service.delete(anyString())).thenReturn(Mono.empty());
+        this.client.delete()
+                .uri(STACKHOLDER_URL_ID, randomUUID().toString())
+                .exchange()
+                .expectStatus()
+                .isNoContent();
+    }
+
+    @Test
     public void errorInsertRequestBeanValidationTest() {
         var request = getInsertRequest()
                 .cnpj("123")
@@ -170,7 +181,7 @@ public class StackHolderControllerTest extends UnitTest {
 
     private StackHolderUpdateRequest.StackHolderUpdateRequestBuilder getUpdateRequest() {
         return StackHolderUpdateRequest.builder()
-                .id(UUID.randomUUID().toString())
+                .id(randomUUID().toString())
                 .email("luke@email.com")
                 .name("Luke Assunção Pimenta")
                 .phones(new ArrayList<>())
@@ -187,7 +198,7 @@ public class StackHolderControllerTest extends UnitTest {
 
     private StackHolderDocument.StackHolderDocumentBuilder getResponse() {
         return StackHolderDocument.builder()
-                .id(UUID.randomUUID().toString())
+                .id(randomUUID().toString())
                 .address(AddressDocument.builder().build())
                 .email("luke@email.com")
                 .name("Luke Assunção Pimenta")
