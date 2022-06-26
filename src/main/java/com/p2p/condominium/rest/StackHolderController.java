@@ -71,6 +71,9 @@ public class StackHolderController {
     @PutMapping
     @ResponseStatus(ACCEPTED)
     public Mono<StackHolderResponse> update(@Valid @RequestBody StackHolderUpdateRequest request) {
+        if(StringUtils.isBlank(request.getCpf()) && StringUtils.isBlank(request.getCnpj()))
+            return Mono.error(new BusinessException(CNPJ_OR_CPF_REQUIRED));
+
         return service.update(request)
                 .map(StackHolderBuilder::toResponse);
     }

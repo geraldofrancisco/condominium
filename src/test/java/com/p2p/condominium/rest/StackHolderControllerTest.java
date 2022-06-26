@@ -88,6 +88,33 @@ public class StackHolderControllerTest extends UnitTest {
     }
 
     @Test
+    public void updateSuccessTest() {
+        var request = getUpdateRequest().build();
+        when(service.update(any())).thenReturn(Mono.just(StackHolderDocument.builder().build()));
+
+        this.client.put()
+                .uri(STACKHOLDER_URL)
+                .contentType(APPLICATION_JSON)
+                .body(Mono.just(request), StackHolderUpdateRequest.class)
+                .exchange()
+                .expectStatus()
+                .isAccepted();
+    }
+
+    @Test
+    public void updateErrorCPFCNPJTest() {
+        var request = getUpdateRequest().cpf(null).cnpj(null).build();
+
+        this.client.put()
+                .uri(STACKHOLDER_URL)
+                .contentType(APPLICATION_JSON)
+                .body(Mono.just(request), StackHolderUpdateRequest.class)
+                .exchange()
+                .expectStatus()
+                .is4xxClientError();
+    }
+
+    @Test
     public void insertSuccessTest() {
         var request = getInsertRequest().build();
         when(service.insert(any())).thenReturn(Mono.just(StackHolderDocument.builder().build()));
@@ -118,7 +145,13 @@ public class StackHolderControllerTest extends UnitTest {
 
     @Test
     public void errorUpdateRequestBeanValidationTest() {
-        var request = getUpdateRequest().build();
+        var request = getUpdateRequest()
+                .id(null)
+                .cnpj("123")
+                .cpf("123")
+                .email(null)
+                .name(null)
+                .build();
         assertTrue(this.violation(request).stream().anyMatch(m -> m.getMessageTemplate().equals(REQUEST_ID_REQUIRED)));
         assertTrue(this.violation(request).stream().anyMatch(m -> m.getMessageTemplate().equals(REQUEST_CNPJ_INVALIDO)));
         assertTrue(this.violation(request).stream().anyMatch(m -> m.getMessageTemplate().equals(REQUEST_CPF_INVALIDO)));
@@ -137,8 +170,11 @@ public class StackHolderControllerTest extends UnitTest {
 
     private StackHolderUpdateRequest.StackHolderUpdateRequestBuilder getUpdateRequest() {
         return StackHolderUpdateRequest.builder()
-                .cnpj("123")
-                .cpf("123");
+                .id(UUID.randomUUID().toString())
+                .email("luke@email.com")
+                .name("Luke Assunção Pimenta")
+                .phones(new ArrayList<>())
+                .cpf("74494917028");
     }
 
     private PaginatedResponse.PaginatedResponseBuilder getReturnSuccessList() {
