@@ -61,6 +61,16 @@ public class StackHolderServiceTest {
         StepVerifier.create(result).expectError(BusinessException.class).verify();
     }
 
+    @Test
+    public void updateSuccessTest() {
+        var document = getDocumentPhysicalPersonReturn().build();
+        var request = getUpdateRequest().build();
+        when(repository.findById(anyString())).thenReturn(Mono.just(document));
+        when(repository.save(any())).thenReturn(Mono.just(document));
+        final var result = this.service.update(request);
+        StepVerifier.create(result).assertNext(response -> assertNotNull(response)).verifyComplete();
+    }
+
     private StackHolderUpdateRequest.StackHolderUpdateRequestBuilder getUpdateRequest() {
         return StackHolderUpdateRequest.builder()
                 .id(randomUUID().toString())
