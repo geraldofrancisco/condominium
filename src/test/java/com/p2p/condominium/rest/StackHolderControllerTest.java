@@ -1,6 +1,5 @@
 package com.p2p.condominium.rest;
 
-import com.p2p.condominium.UnitTest;
 import com.p2p.condominium.document.AddressDocument;
 import com.p2p.condominium.document.StackHolderDocument;
 import com.p2p.condominium.dto.PaginatedResponse;
@@ -20,7 +19,6 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
-import java.util.UUID;
 
 import static com.p2p.condominium.constant.ErrorConstant.REQUEST_CNPJ_INVALIDO;
 import static com.p2p.condominium.constant.ErrorConstant.REQUEST_CPF_INVALIDO;
@@ -39,7 +37,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = {StackHolderController.class, BusinessExceptionHandler.class})
 @WebFluxTest(controllers = StackHolderController.class)
-public class StackHolderControllerTest extends UnitTest {
+public class StackHolderControllerTest extends ControllerTest {
 
     @Autowired
     private WebTestClient client;

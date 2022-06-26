@@ -1,4 +1,4 @@
-package com.p2p.condominium;
+package com.p2p.condominium.rest;
 
 import org.junit.Before;
 
@@ -8,7 +8,7 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import java.util.Set;
 
-public abstract class UnitTest {
+public abstract class ControllerTest {
 
     private Validator validator;
 
