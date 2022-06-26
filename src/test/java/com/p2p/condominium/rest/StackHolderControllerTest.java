@@ -1,11 +1,17 @@
 package com.p2p.condominium.rest;
 
+import com.p2p.condominium.UnitTest;
+import com.p2p.condominium.document.AddressDocument;
+import com.p2p.condominium.document.StackHolderDocument;
 import com.p2p.condominium.dto.PaginatedResponse;
+import com.p2p.condominium.dto.StackHolderInsertRequest;
+import com.p2p.condominium.dto.StackHolderUpdateRequest;
+import com.p2p.condominium.exception.BusinessException;
+import com.p2p.condominium.exception.BusinessExceptionHandler;
 import com.p2p.condominium.repository.StackHolderRepository;
 import com.p2p.condominium.service.StackHolderService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -14,13 +20,25 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 
-import javax.validation.Validator;
 import java.util.ArrayList;
+import java.util.UUID;
+
+import static com.p2p.condominium.constant.ErrorConstant.REQUEST_CNPJ_INVALIDO;
+import static com.p2p.condominium.constant.ErrorConstant.REQUEST_CPF_INVALIDO;
+import static com.p2p.condominium.constant.ErrorConstant.REQUEST_EMAIL_INVALID;
+import static com.p2p.condominium.constant.ErrorConstant.REQUEST_EMAIL_REQUIRED;
+import static com.p2p.condominium.constant.ErrorConstant.REQUEST_ID_REQUIRED;
+import static com.p2p.condominium.constant.ErrorConstant.REQUEST_NAME_REQUIRED;
+import static com.p2p.condominium.enums.TypePersonEnum.FISICA;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 @RunWith(SpringRunner.class)
-@ContextConfiguration(classes = {StackHolderController.class})
+@ContextConfiguration(classes = {StackHolderController.class, BusinessExceptionHandler.class})
 @WebFluxTest(controllers = StackHolderController.class)
-public class StackHolderControllerTest {
+public class StackHolderControllerTest extends UnitTest {
 
     @Autowired
     private WebTestClient client;
@@ -31,13 +49,14 @@ public class StackHolderControllerTest {
     @MockBean
     private StackHolderRepository repository;
 
-    private Validator validator;
-
     private static final String STACKHOLDER_URL = "/v1/stack-holder";
+    private static final String STACKHOLDER_URL_ID = "/v1/stack-holder/{id}";
+
+    private static final String INVALID_EMAIL = "email";
 
     @Test
     public void testListSuccess() {
-        Mockito.when(service.findAll(Mockito.any())).thenReturn(Mono.just(getReturn().build()));
+        when(service.findAll(any())).thenReturn(Mono.just(getReturnSuccessList().build()));
         this.client.get()
                 .uri(STACKHOLDER_URL)
                 .exchange()
@@ -45,11 +64,101 @@ public class StackHolderControllerTest {
                 .isOk();
     }
 
-    private PaginatedResponse.PaginatedResponseBuilder getReturn() {
+    @Test
+    public void getByIdSuccessTest() {
+        when(service.findById(any())).thenReturn(Mono.just(getResponse().build()));
+        this.client.get()
+                .uri(STACKHOLDER_URL_ID, UUID.randomUUID().toString())
+                .exchange()
+                .expectStatus()
+                .isOk();
+    }
+
+    @Test
+    public void insertErrorCPFCNPJTest() {
+        var request = getInsertRequest().cpf(null).cnpj(null).build();
+        //when(service.insert(any())).thenReturn(Mono.just(StackHolderDocument.builder().build()));
+        this.client.post()
+                .uri(STACKHOLDER_URL)
+                .contentType(APPLICATION_JSON)
+                .body(Mono.just(request), StackHolderInsertRequest.class)
+                .exchange()
+                .expectStatus()
+                .is4xxClientError();
+    }
+
+    @Test
+    public void insertSuccessTest() {
+        var request = getInsertRequest().build();
+        when(service.insert(any())).thenReturn(Mono.just(StackHolderDocument.builder().build()));
+
+        this.client.post()
+                .uri(STACKHOLDER_URL)
+                .contentType(APPLICATION_JSON)
+                .body(Mono.just(request), StackHolderInsertRequest.class)
+                .exchange()
+                .expectStatus()
+                .isCreated();
+    }
+
+    @Test
+    public void errorInsertRequestBeanValidationTest() {
+        var request = getInsertRequest()
+                .cnpj("123")
+                .cpf("123")
+                .email(null)
+                .name(null)
+                .build();
+        assertTrue(this.violation(request).stream().anyMatch(m -> m.getMessageTemplate().equals(REQUEST_CNPJ_INVALIDO)));
+        assertTrue(this.violation(request).stream().anyMatch(m -> m.getMessageTemplate().equals(REQUEST_CPF_INVALIDO)));
+        assertTrue(this.violation(request).stream().anyMatch(m -> m.getMessageTemplate().equals(REQUEST_NAME_REQUIRED)));
+        assertTrue(this.violation(request).stream().anyMatch(m -> m.getMessageTemplate().equals(REQUEST_EMAIL_REQUIRED)));
+        assertTrue(this.violation(getInsertRequest().email(INVALID_EMAIL).build()).stream().anyMatch(m -> m.getMessageTemplate().equals(REQUEST_EMAIL_INVALID)));
+    }
+
+    @Test
+    public void errorUpdateRequestBeanValidationTest() {
+        var request = getUpdateRequest().build();
+        assertTrue(this.violation(request).stream().anyMatch(m -> m.getMessageTemplate().equals(REQUEST_ID_REQUIRED)));
+        assertTrue(this.violation(request).stream().anyMatch(m -> m.getMessageTemplate().equals(REQUEST_CNPJ_INVALIDO)));
+        assertTrue(this.violation(request).stream().anyMatch(m -> m.getMessageTemplate().equals(REQUEST_CPF_INVALIDO)));
+        assertTrue(this.violation(request).stream().anyMatch(m -> m.getMessageTemplate().equals(REQUEST_NAME_REQUIRED)));
+        assertTrue(this.violation(request).stream().anyMatch(m -> m.getMessageTemplate().equals(REQUEST_EMAIL_REQUIRED)));
+        assertTrue(this.violation(getUpdateRequest().email(INVALID_EMAIL).build()).stream().anyMatch(m -> m.getMessageTemplate().equals(REQUEST_EMAIL_INVALID)));
+    }
+
+    private StackHolderInsertRequest.StackHolderInsertRequestBuilder getInsertRequest() {
+        return StackHolderInsertRequest.builder()
+                .email("luke@email.com")
+                .name("Luke Assunção Pimenta")
+                .phones(new ArrayList<>())
+                .cpf("74494917028");
+    }
+
+    private StackHolderUpdateRequest.StackHolderUpdateRequestBuilder getUpdateRequest() {
+        return StackHolderUpdateRequest.builder()
+                .cnpj("123")
+                .cpf("123");
+    }
+
+    private PaginatedResponse.PaginatedResponseBuilder getReturnSuccessList() {
         return PaginatedResponse.builder()
                 .content(new ArrayList())
                 .page(0)
                 .size(1)
                 .totalRecords(1L);
     }
+
+    private StackHolderDocument.StackHolderDocumentBuilder getResponse() {
+        return StackHolderDocument.builder()
+                .id(UUID.randomUUID().toString())
+                .address(AddressDocument.builder().build())
+                .email("luke@email.com")
+                .name("Luke Assunção Pimenta")
+                .phones(new ArrayList<>())
+                .typePersonEnum(FISICA)
+                .identification("74494917028");
+    }
+
+
 }
