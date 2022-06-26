@@ -13,7 +13,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.springframework.test.context.junit4.SpringRunner;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
@@ -22,6 +21,7 @@ import java.util.ArrayList;
 
 import static java.util.UUID.randomUUID;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
@@ -38,7 +38,7 @@ public class StackHolderServiceTest {
     @Test
     public void insertSuccess() {
         when(repository.findByIdentification(anyString())).thenReturn(Mono.empty());
-        when(repository.save(any())).thenReturn(Mono.just(getDocumentPhysicalPersonReturn().build()));
+        when(repository.save(any())).thenReturn(Mono.just(getDocumentReturn().build()));
         final var result = this.service.insert(getInsertRequest().build());
         StepVerifier.create(result)
                 .assertNext(response -> {
@@ -49,7 +49,7 @@ public class StackHolderServiceTest {
 
     @Test
     public void findByIdSuccessTest() {
-        when(repository.findById(anyString())).thenReturn(Mono.just(getDocumentPhysicalPersonReturn().build()));
+        when(repository.findById(anyString())).thenReturn(Mono.just(getDocumentReturn().build()));
         final var result = this.service.findById(anyString());
         StepVerifier.create(result).assertNext(response -> assertNotNull(response)).verifyComplete();
     }
@@ -63,12 +63,21 @@ public class StackHolderServiceTest {
 
     @Test
     public void updateSuccessTest() {
-        var document = getDocumentPhysicalPersonReturn().build();
+        var document = getDocumentReturn().build();
         var request = getUpdateRequest().build();
         when(repository.findById(anyString())).thenReturn(Mono.just(document));
         when(repository.save(any())).thenReturn(Mono.just(document));
         final var result = this.service.update(request);
         StepVerifier.create(result).assertNext(response -> assertNotNull(response)).verifyComplete();
+    }
+
+    @Test
+    public void deleteSuccessTest() {
+        var document = getDocumentReturn().build();
+        when(repository.findById(anyString())).thenReturn(Mono.just(document));
+        when(repository.delete(any())).thenReturn(Mono.empty().then());
+        final var result = this.service.delete(anyString());
+        StepVerifier.create(result).expectComplete().verify();
     }
 
     private StackHolderUpdateRequest.StackHolderUpdateRequestBuilder getUpdateRequest() {
@@ -91,7 +100,7 @@ public class StackHolderServiceTest {
     }
 
 
-    private StackHolderDocument.StackHolderDocumentBuilder getDocumentPhysicalPersonReturn() {
+    private StackHolderDocument.StackHolderDocumentBuilder getDocumentReturn() {
         return StackHolderDocument.builder()
                 .id(randomUUID().toString())
                 .name("Gihyondîs")
