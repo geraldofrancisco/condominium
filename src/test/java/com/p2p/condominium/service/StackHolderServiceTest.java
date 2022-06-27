@@ -13,7 +13,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit4.SpringRunner;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
@@ -34,6 +37,15 @@ public class StackHolderServiceTest {
 
     @Mock
     private StackHolderRepository repository;
+
+    @Test
+    public void findAllSuccess() {
+        var pageable = PageRequest.of(0, 1);
+        when(repository.count()).thenReturn(Mono.just(1L));
+        when(repository.findByIdNotNullOrderByNameAsc(pageable)).thenReturn(Flux.just(getDocumentReturn().build()));
+        final var result = this.service.findAll(pageable);
+        StepVerifier.create(result).assertNext(response -> assertNotNull(response)).verifyComplete();
+    }
 
     @Test
     public void insertSuccess() {
