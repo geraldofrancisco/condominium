@@ -11,7 +11,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
 @Builder
 @ToString
 @Data
-public class CondominiumDocument {
+public class CondominiumDocument extends BaseDocument {
     @Id
     private String id;
 

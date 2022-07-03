@@ -14,7 +14,7 @@ import java.util.List;
 @Builder
 @ToString
 @Data
-public class StackHolderDocument {
+public class StackHolderDocument extends BaseDocument {
     @Id
     private String id;
 

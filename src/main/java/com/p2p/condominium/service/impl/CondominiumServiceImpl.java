@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
 import static com.p2p.condominium.constant.ErrorConstant.ID_NOT_EXIST;
+import static com.p2p.condominium.util.BaseDocumentUtil.insertInformation;
+import static com.p2p.condominium.util.BaseDocumentUtil.updateInformation;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Service
@@ -27,13 +29,15 @@ public class CondominiumServiceImpl implements CondominiumService {
 
     @Override
     public Mono<CondominiumDocument> insert(CondominiumDTO dto) {
+        var document = CondominiumBuilder.toDocument(dto);
+        insertInformation(document);
         return this.repository.findByIdentification(dto.getIdentification())
-                .switchIfEmpty(saveDocument(dto));
+                .switchIfEmpty(saveDocument(document, dto.getConstructionCompanyId()));
     }
 
-    private Mono<CondominiumDocument> saveDocument(CondominiumDTO dto) {
-        var document = CondominiumBuilder.toDocument(dto);
-        return stackHolderService.findByLegalPersonAndId(dto.getConstructionCompanyId())
+    private Mono<CondominiumDocument> saveDocument(CondominiumDocument document, String constructionId) {
+
+        return stackHolderService.findByLegalPersonAndId(constructionId)
                 .flatMap(sh -> {
                     document.setConstructionCompany(sh.getId());
                     return Mono.just(document);
@@ -43,8 +47,10 @@ public class CondominiumServiceImpl implements CondominiumService {
 
     @Override
     public Mono<CondominiumDocument> update(CondominiumDTO dto) {
+        var document = CondominiumBuilder.toDocument(dto);
+        updateInformation(document);
         return this.findById(dto.getId())
-                .flatMap(c -> this.repository.save(CondominiumBuilder.toDocument(dto)));
+                .flatMap(c -> this.repository.save(document));
     }
 
     @Override
