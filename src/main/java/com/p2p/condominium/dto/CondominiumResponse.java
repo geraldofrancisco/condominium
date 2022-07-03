@@ -21,6 +21,6 @@ public class CondominiumResponse {
     private String id;
     private String name;
     private String constructionCompanyId;
-    private String condominiumManagerId;
+    private CondominiumManagerResponse condominiumManager;
     private AddressResponse address;
 }

@@ -42,7 +42,7 @@ public class CondominiumBuilder {
         return CondominiumResponse.builder()
                 .id(document.getId())
                 .name(document.getName())
-                .condominiumManagerId(document.getCondominiumManager())
+                .condominiumManager(CondominiumManagerBuilder.toResponse(document.getCondominiumManager()))
                 .constructionCompanyId(document.getConstructionCompany())
                 .address(AddressBuilder.toResponse(document.getAddress()))
                 .build();

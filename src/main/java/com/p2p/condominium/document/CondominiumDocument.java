@@ -15,6 +15,9 @@ public class CondominiumDocument {
     @Id
     private String id;
 
+    @Field("cnpj")
+    private String identification;
+
     @Field("nome")
     private String name;
 
@@ -22,7 +25,7 @@ public class CondominiumDocument {
     private String constructionCompany;
 
     @Field("sindico")
-    private String condominiumManager;
+    private CondominiumManagerDocument condominiumManager;
 
     @Field("endereco")
     private AddressDocument address;
