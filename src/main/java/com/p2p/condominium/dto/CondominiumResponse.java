@@ -17,17 +17,10 @@ import static com.p2p.condominium.constant.ErrorConstant.REQUEST_NAME_REQUIRED;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CondominiumDTO {
+public class CondominiumResponse {
     private String id;
-
-    @NotBlank(message = REQUEST_NAME_REQUIRED)
     private String name;
-
-    @NotBlank(message = REQUEST_CONSTRUCTION_COMPANY_REQUIRED)
     private String constructionCompanyId;
     private String condominiumManagerId;
-
-    @Valid
-    @NotNull(message = REQUEST_ADDRESS_REQUIRED)
-    private Address address;
+    private AddressResponse address;
 }

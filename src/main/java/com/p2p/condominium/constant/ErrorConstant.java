@@ -15,5 +15,6 @@ public class ErrorConstant {
     public static final String REQUEST_EMAIL_INVALID = "O formato do email está inválido";
     public static final String REQUEST_ID_REQUIRED = "O id é obrigatório";
     public static final String REQUEST_CONSTRUCTION_COMPANY_REQUIRED = "A construtora é de preenchimento obrigatório";
-    public static final String REQUEST_CONDOMINIUM_MANAGER_REQUIRED = "";
+    public static final String REQUEST_ADDRESS_REQUIRED = "Endereço é obrigatório";
+
 }

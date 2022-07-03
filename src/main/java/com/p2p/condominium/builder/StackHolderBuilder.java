@@ -41,6 +41,9 @@ public class StackHolderBuilder {
     }
 
     public static final StackHolderResponse toResponse(StackHolderDocument document) {
+        if(document == null)
+            return null;
+
         return StackHolderResponse.builder()
                 .id(document.getId())
                 .email(document.getEmail())
@@ -48,7 +51,7 @@ public class StackHolderBuilder {
                 .identification(document.getIdentification())
                 .typePersonEnum(document.getTypePersonEnum())
                 .phones(PhoneBuilder.toDTO(document.getPhones()))
-                .address(AddressBuilder.toDTO(document.getAddress()))
+                .address(AddressBuilder.toResponse(document.getAddress()))
                 .build();
     }
 }

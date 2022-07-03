@@ -19,10 +19,10 @@ public class CondominiumDocument {
     private String name;
 
     @Field("construtora")
-    private StackHolderDocument constructionCompany;
+    private String constructionCompany;
 
     @Field("sindico")
-    private StackHolderDocument condominiumManager;
+    private String condominiumManager;
 
     @Field("endereco")
     private AddressDocument address;

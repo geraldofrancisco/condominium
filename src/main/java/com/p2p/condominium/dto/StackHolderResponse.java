@@ -15,5 +15,5 @@ public class StackHolderResponse {
     private String email;
     private List<Phone> phones;
     private TypePersonEnum typePersonEnum;
-    private Address address;
+    private AddressResponse address;
 }

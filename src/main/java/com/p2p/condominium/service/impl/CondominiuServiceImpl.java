@@ -8,6 +8,7 @@ import com.p2p.condominium.dto.PaginatedResponse;
 import com.p2p.condominium.exception.BusinessException;
 import com.p2p.condominium.repository.CondominiumRepository;
 import com.p2p.condominium.service.CondominiumService;
+import com.p2p.condominium.service.StackHolderService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -22,10 +23,22 @@ public class CondominiuServiceImpl implements CondominiumService {
 
     private CondominiumRepository repository;
 
+    private StackHolderService stackHolderService;
+
     @Override
     public Mono<CondominiumDocument> insert(CondominiumDTO dto) {
-        return this.repository.findById(dto.getId())
-                .switchIfEmpty(this.repository.save(CondominiumBuilder.toDocument(dto)));
+        return this.repository.findByName(dto.getName())
+                .switchIfEmpty(saveDocument(dto));
+    }
+
+    private Mono<CondominiumDocument> saveDocument(CondominiumDTO dto) {
+        var document = CondominiumBuilder.toDocument(dto);
+        return stackHolderService.findById(dto.getConstructionCompanyId())
+                .flatMap(sh -> {
+                    document.setConstructionCompany(sh.getId());
+                    return Mono.just(document);
+                })
+                .flatMap(repository::save);
     }
 
     @Override

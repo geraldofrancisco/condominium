@@ -2,6 +2,7 @@ package com.p2p.condominium.builder;
 
 import com.p2p.condominium.document.AddressDocument;
 import com.p2p.condominium.dto.Address;
+import com.p2p.condominium.dto.AddressResponse;
 import lombok.NoArgsConstructor;
 
 import static lombok.AccessLevel.PRIVATE;
@@ -23,11 +24,11 @@ public class AddressBuilder {
                 .build();
     }
 
-    public static final Address toDTO(AddressDocument document) {
+    public static final AddressResponse toResponse(AddressDocument document) {
         if (document == null)
             return null;
 
-        return Address.builder()
+        return AddressResponse.builder()
                 .state(document.getState())
                 .city(document.getCity())
                 .complement(document.getComplement())

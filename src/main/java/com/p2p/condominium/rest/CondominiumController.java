@@ -1,14 +1,12 @@
 package com.p2p.condominium.rest;
 
-import com.p2p.condominium.builder.StackHolderBuilder;
+import com.p2p.condominium.builder.CondominiumBuilder;
+import com.p2p.condominium.dto.CondominiumDTO;
+import com.p2p.condominium.dto.CondominiumResponse;
+import com.p2p.condominium.dto.CondominiumUpdateRequest;
 import com.p2p.condominium.dto.PaginatedResponse;
-import com.p2p.condominium.dto.StackHolderInsertRequest;
-import com.p2p.condominium.dto.StackHolderResponse;
-import com.p2p.condominium.dto.StackHolderUpdateRequest;
-import com.p2p.condominium.exception.BusinessException;
-import com.p2p.condominium.service.StackHolderService;
+import com.p2p.condominium.service.CondominiumService;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,7 +24,6 @@ import javax.validation.Valid;
 
 import static com.p2p.condominium.constant.ControllerConstant.DEFAULT_PAGE;
 import static com.p2p.condominium.constant.ControllerConstant.DEFAULT_SIZE;
-import static com.p2p.condominium.constant.ErrorConstant.CNPJ_OR_CPF_REQUIRED;
 import static org.springframework.data.domain.PageRequest.of;
 import static org.springframework.http.HttpStatus.ACCEPTED;
 import static org.springframework.http.HttpStatus.CREATED;
@@ -34,12 +31,11 @@ import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
 
 @RestController
-@RequestMapping("/v1/stackholder")
+@RequestMapping("/v1/condominium")
 @RequiredArgsConstructor
 @Validated
-public class StackHolderController {
-
-    private final StackHolderService service;
+public class CondominiumController {
+    private final CondominiumService service;
 
     @GetMapping
     @ResponseStatus(OK)
@@ -52,29 +48,23 @@ public class StackHolderController {
 
     @GetMapping("/{id}")
     @ResponseStatus(OK)
-    public Mono<StackHolderResponse> getById(@PathVariable String id) {
+    public Mono<CondominiumResponse> getById(@PathVariable String id) {
         return this.service.findById(id)
-                .map(StackHolderBuilder::toResponse);
+                .map(CondominiumBuilder::toResponse);
     }
 
     @PostMapping
     @ResponseStatus(CREATED)
-    public Mono<StackHolderResponse> insert(@Valid @RequestBody StackHolderInsertRequest request) {
-        if(StringUtils.isBlank(request.getCpf()) && StringUtils.isBlank(request.getCnpj()))
-            return Mono.error(new BusinessException(CNPJ_OR_CPF_REQUIRED));
-
+    public Mono<CondominiumResponse> insert(@Valid @RequestBody CondominiumDTO request) {
         return service.insert(request)
-                .map(StackHolderBuilder::toResponse);
+                .map(CondominiumBuilder::toResponse);
     }
 
     @PutMapping
     @ResponseStatus(ACCEPTED)
-    public Mono<StackHolderResponse> update(@Valid @RequestBody StackHolderUpdateRequest request) {
-        if(StringUtils.isBlank(request.getCpf()) && StringUtils.isBlank(request.getCnpj()))
-            return Mono.error(new BusinessException(CNPJ_OR_CPF_REQUIRED));
-
+    public Mono<CondominiumResponse> update(@Valid @RequestBody CondominiumUpdateRequest request) {
         return service.update(request)
-                .map(StackHolderBuilder::toResponse);
+                .map(CondominiumBuilder::toResponse);
     }
 
     @DeleteMapping("/{id}")
