@@ -20,5 +20,7 @@ public class ErrorConstant {
     public static final String REQUEST_ADDRESS_REQUIRED = "Endereço é obrigatório";
 
     public static final String STACKHOLDER_ID_NOT_EXIST = "O stackholder informado não existe";
+    public static final String STACKHOLDER_PHYSICAL_PERSON_ID_NOT_EXIST = "A pessoa informada não existe";
+    public static final String STACKHOLDER_LEGAL_PERSON_ID_NOT_EXIST = "A empresa informada não existe";
 
 }

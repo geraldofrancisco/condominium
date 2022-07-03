@@ -33,7 +33,7 @@ public class CondominiumServiceImpl implements CondominiumService {
 
     private Mono<CondominiumDocument> saveDocument(CondominiumDTO dto) {
         var document = CondominiumBuilder.toDocument(dto);
-        return stackHolderService.findById(dto.getConstructionCompanyId())
+        return stackHolderService.findByLegalPersonAndId(dto.getConstructionCompanyId())
                 .flatMap(sh -> {
                     document.setConstructionCompany(sh.getId());
                     return Mono.just(document);

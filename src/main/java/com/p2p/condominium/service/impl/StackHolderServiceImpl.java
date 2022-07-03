@@ -15,6 +15,10 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
 import static com.p2p.condominium.constant.ErrorConstant.STACKHOLDER_ID_NOT_EXIST;
+import static com.p2p.condominium.constant.ErrorConstant.STACKHOLDER_LEGAL_PERSON_ID_NOT_EXIST;
+import static com.p2p.condominium.constant.ErrorConstant.STACKHOLDER_PHYSICAL_PERSON_ID_NOT_EXIST;
+import static com.p2p.condominium.enums.TypePersonEnum.FISICA;
+import static com.p2p.condominium.enums.TypePersonEnum.JURIDICA;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Service
@@ -45,6 +49,18 @@ public class StackHolderServiceImpl implements StackHolderService {
     public Mono<StackHolderDocument> findById(String id) {
         return this.repository.findById(id)
                 .switchIfEmpty(Mono.error(new BusinessException(STACKHOLDER_ID_NOT_EXIST, NOT_FOUND)));
+    }
+
+    @Override
+    public Mono<StackHolderDocument> findByPhysicalPersonAndId(String id) {
+        return this.repository.findByTypePersonEnumAndId(FISICA, id)
+                .switchIfEmpty(Mono.error(new BusinessException(STACKHOLDER_PHYSICAL_PERSON_ID_NOT_EXIST, NOT_FOUND)));
+    }
+
+    @Override
+    public Mono<StackHolderDocument> findByLegalPersonAndId(String id) {
+        return this.repository.findByTypePersonEnumAndId(JURIDICA, id)
+                .switchIfEmpty(Mono.error(new BusinessException(STACKHOLDER_LEGAL_PERSON_ID_NOT_EXIST, NOT_FOUND)));
     }
 
     @Override

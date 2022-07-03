@@ -16,5 +16,8 @@ public interface StackHolderService {
 
     Mono<StackHolderDocument> findById(String id);
 
+    Mono<StackHolderDocument> findByPhysicalPersonAndId(String id);
+    Mono<StackHolderDocument> findByLegalPersonAndId(String id);
+
     Mono<PaginatedResponse> findAll(Pageable pageable);
 }
