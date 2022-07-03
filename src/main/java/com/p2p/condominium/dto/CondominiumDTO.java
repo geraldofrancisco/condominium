@@ -12,8 +12,11 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import static com.p2p.condominium.constant.ErrorConstant.REQUEST_ADDRESS_REQUIRED;
+import static com.p2p.condominium.constant.ErrorConstant.REQUEST_CNPJ_INVALIDO;
 import static com.p2p.condominium.constant.ErrorConstant.REQUEST_CONSTRUCTION_COMPANY_REQUIRED;
+import static com.p2p.condominium.constant.ErrorConstant.REQUEST_IDENTIFICATION_REQUIRED;
 import static com.p2p.condominium.constant.ErrorConstant.REQUEST_NAME_REQUIRED;
+import static com.p2p.condominium.util.CpfCnpjUtil.removeSpecialCharacters;
 
 @Builder
 @Data
@@ -23,7 +26,8 @@ import static com.p2p.condominium.constant.ErrorConstant.REQUEST_NAME_REQUIRED;
 public class CondominiumDTO {
     private String id;
 
-    @CNPJ
+    @CNPJ(message = REQUEST_CNPJ_INVALIDO)
+    @NotBlank(message = REQUEST_IDENTIFICATION_REQUIRED)
     private String identification;
 
     @NotBlank(message = REQUEST_NAME_REQUIRED)
@@ -35,4 +39,8 @@ public class CondominiumDTO {
     @Valid
     @NotNull(message = REQUEST_ADDRESS_REQUIRED)
     private Address address;
+
+    public String getIdentification() {
+        return removeSpecialCharacters(identification);
+    }
 }

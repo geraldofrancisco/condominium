@@ -19,7 +19,7 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Service
 @AllArgsConstructor
-public class CondominiuServiceImpl implements CondominiumService {
+public class CondominiumServiceImpl implements CondominiumService {
 
     private CondominiumRepository repository;
 
@@ -27,7 +27,7 @@ public class CondominiuServiceImpl implements CondominiumService {
 
     @Override
     public Mono<CondominiumDocument> insert(CondominiumDTO dto) {
-        return this.repository.findByName(dto.getName())
+        return this.repository.findByIdentification(dto.getIdentification())
                 .switchIfEmpty(saveDocument(dto));
     }
 

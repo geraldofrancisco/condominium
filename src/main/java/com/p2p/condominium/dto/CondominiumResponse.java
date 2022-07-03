@@ -19,6 +19,7 @@ import static com.p2p.condominium.constant.ErrorConstant.REQUEST_NAME_REQUIRED;
 @AllArgsConstructor
 public class CondominiumResponse {
     private String id;
+    private String identification;
     private String name;
     private String constructionCompanyId;
     private CondominiumManagerResponse condominiumManager;

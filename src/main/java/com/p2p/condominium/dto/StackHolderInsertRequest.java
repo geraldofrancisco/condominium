@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.constraints.br.CNPJ;
 import org.hibernate.validator.constraints.br.CPF;
 
@@ -19,6 +18,7 @@ import static com.p2p.condominium.constant.ErrorConstant.REQUEST_CPF_INVALIDO;
 import static com.p2p.condominium.constant.ErrorConstant.REQUEST_EMAIL_INVALID;
 import static com.p2p.condominium.constant.ErrorConstant.REQUEST_EMAIL_REQUIRED;
 import static com.p2p.condominium.constant.ErrorConstant.REQUEST_NAME_REQUIRED;
+import static com.p2p.condominium.util.CpfCnpjUtil.removeSpecialCharacters;
 
 @Builder
 @Data
@@ -61,13 +61,5 @@ public class StackHolderInsertRequest {
         return this.cpf != null ? TypePersonEnum.FISICA : TypePersonEnum.JURIDICA;
     }
 
-    private String removeSpecialCharacters(String string) {
-        if(StringUtils.isBlank(string))
-            return null;
 
-        return string
-                .replace(".","")
-                .replace("-", "")
-                .replace("/", "");
-    }
 }

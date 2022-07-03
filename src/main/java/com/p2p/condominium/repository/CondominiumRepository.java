@@ -11,5 +11,5 @@ import reactor.core.publisher.Mono;
 public interface CondominiumRepository extends ReactiveMongoRepository<CondominiumDocument, String> {
     Flux<CondominiumDocument> findByIdNotNullOrderByNameAsc(final Pageable page);
 
-    Mono<CondominiumDocument> findByName(final String name);
+    Mono<CondominiumDocument> findByIdentification(final String name);
 }
