@@ -14,17 +14,17 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit4.SpringRunner;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
+import static com.p2p.condominium.enums.TypePersonEnum.FISICA;
 import static java.util.UUID.randomUUID;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
@@ -74,6 +74,34 @@ public class StackHolderServiceTest {
     }
 
     @Test
+    public void findByPhysicalPersonAndIdTest() {
+        when(repository.findByTypePersonEnumAndId(any(), anyString())).thenReturn(Mono.just(getDocumentReturn().build()));
+        final var result = this.service.findByPhysicalPersonAndId(UUID.randomUUID().toString());
+        StepVerifier.create(result).assertNext(response -> assertNotNull(response)).verifyComplete();
+    }
+
+    @Test
+    public void findByPhysicalPersonAndIdErrorTest() {
+        when(repository.findByTypePersonEnumAndId(any(), anyString())).thenReturn(Mono.empty());
+        final var result = this.service.findByPhysicalPersonAndId(UUID.randomUUID().toString());
+        StepVerifier.create(result).expectError(BusinessException.class).verify();
+    }
+
+    @Test
+    public void findByLegalPersonAndIdTest() {
+        when(repository.findByTypePersonEnumAndId(any(), anyString())).thenReturn(Mono.just(getDocumentReturn().build()));
+        final var result = this.service.findByLegalPersonAndId(UUID.randomUUID().toString());
+        StepVerifier.create(result).assertNext(response -> assertNotNull(response)).verifyComplete();
+    }
+
+    @Test
+    public void findByLegalPersonAndIdErrorTest() {
+        when(repository.findByTypePersonEnumAndId(any(), anyString())).thenReturn(Mono.empty());
+        final var result = this.service.findByLegalPersonAndId(UUID.randomUUID().toString());
+        StepVerifier.create(result).expectError(BusinessException.class).verify();
+    }
+
+    @Test
     public void updateSuccessTest() {
         var document = getDocumentReturn().build();
         var request = getUpdateRequest().build();
@@ -119,7 +147,7 @@ public class StackHolderServiceTest {
                 .address(AddressDocument.builder().build())
                 .email("email@email.com")
                 .identification("98487828000")
-                .typePersonEnum(TypePersonEnum.FISICA)
+                .typePersonEnum(FISICA)
                 .phones(new ArrayList<>());
     }
 
