@@ -16,10 +16,4 @@ public class CondominiumUpdateRequest extends CondominiumDTO {
 
     @NotBlank(message = REQUEST_ID_REQUIRED)
     public String id;
-
-    @NotBlank(message = REQUEST_NAME_REQUIRED)
-    public String name;
-
-    @NotBlank(message = REQUEST_CONSTRUCTION_COMPANY_REQUIRED)
-    private String constructionCompanyId;
 }
