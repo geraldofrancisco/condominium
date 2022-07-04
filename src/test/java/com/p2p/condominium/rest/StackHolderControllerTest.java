@@ -49,7 +49,7 @@ public class StackHolderControllerTest extends ControllerTest {
     private StackHolderRepository repository;
 
     private static final String STACKHOLDER_URL = "/v1/stackholder";
-    private static final String STACKHOLDER_URL_ID = "/v1/stackholder/{id}";
+    private static final String STACKHOLDER_URL_ID = STACKHOLDER_URL.concat("/{id}");
 
     private static final String INVALID_EMAIL = "email";
 
