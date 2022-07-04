@@ -50,7 +50,7 @@ public class CondominiumServiceImpl implements CondominiumService {
         var document = CondominiumBuilder.toDocument(dto);
         updateInformation(document);
         return this.findById(dto.getId())
-                .flatMap(c -> this.repository.save(document));
+                .flatMap(c -> saveDocument(document, dto.getConstructionCompanyId()));
     }
 
     @Override

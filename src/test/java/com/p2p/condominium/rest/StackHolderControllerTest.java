@@ -39,14 +39,8 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 @WebFluxTest(controllers = StackHolderController.class)
 public class StackHolderControllerTest extends ControllerTest {
 
-    @Autowired
-    private WebTestClient client;
-
     @MockBean
     private StackHolderService service;
-
-    @MockBean
-    private StackHolderRepository repository;
 
     private static final String STACKHOLDER_URL = "/v1/stackholder";
     private static final String STACKHOLDER_URL_ID = STACKHOLDER_URL.concat("/{id}");
@@ -76,7 +70,7 @@ public class StackHolderControllerTest extends ControllerTest {
     @Test
     public void insertErrorCPFCNPJTest() {
         var request = getInsertRequest().cpf(null).cnpj(null).build();
-        //when(service.insert(any())).thenReturn(Mono.just(StackHolderDocument.builder().build()));
+
         this.client.post()
                 .uri(STACKHOLDER_URL)
                 .contentType(APPLICATION_JSON)
@@ -186,13 +180,7 @@ public class StackHolderControllerTest extends ControllerTest {
                 .cpf("74494917028");
     }
 
-    private PaginatedResponse.PaginatedResponseBuilder getReturnSuccessList() {
-        return PaginatedResponse.builder()
-                .content(new ArrayList())
-                .page(0)
-                .size(1)
-                .totalRecords(1L);
-    }
+
 
     private StackHolderDocument.StackHolderDocumentBuilder getResponse() {
         return StackHolderDocument.builder()

@@ -74,7 +74,7 @@ public class StackHolderServiceTest {
     }
 
     @Test
-    public void findByPhysicalPersonAndIdTest() {
+    public void findByPhysicalPersonAndIdSuccessTest() {
         when(repository.findByTypePersonEnumAndId(any(), anyString())).thenReturn(Mono.just(getDocumentReturn().build()));
         final var result = this.service.findByPhysicalPersonAndId(UUID.randomUUID().toString());
         StepVerifier.create(result).assertNext(response -> assertNotNull(response)).verifyComplete();
@@ -88,7 +88,7 @@ public class StackHolderServiceTest {
     }
 
     @Test
-    public void findByLegalPersonAndIdTest() {
+    public void findByLegalPersonAndIdSuccessTest() {
         when(repository.findByTypePersonEnumAndId(any(), anyString())).thenReturn(Mono.just(getDocumentReturn().build()));
         final var result = this.service.findByLegalPersonAndId(UUID.randomUUID().toString());
         StepVerifier.create(result).assertNext(response -> assertNotNull(response)).verifyComplete();
