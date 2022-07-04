@@ -48,8 +48,8 @@ public class StackHolderControllerTest extends ControllerTest {
     @MockBean
     private StackHolderRepository repository;
 
-    private static final String STACKHOLDER_URL = "/v1/stack-holder";
-    private static final String STACKHOLDER_URL_ID = "/v1/stack-holder/{id}";
+    private static final String STACKHOLDER_URL = "/v1/stackholder";
+    private static final String STACKHOLDER_URL_ID = "/v1/stackholder/{id}";
 
     private static final String INVALID_EMAIL = "email";
 
