@@ -20,7 +20,7 @@ public abstract class ControllerTest {
     private Validator validator;
 
     @Before
-    public void setup() {
+    public void init() {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         this.validator = factory.getValidator();
     }

@@ -5,19 +5,27 @@ import com.p2p.condominium.document.StackHolderDocument;
 import com.p2p.condominium.dto.StackHolderInsertRequest;
 import com.p2p.condominium.dto.StackHolderUpdateRequest;
 import com.p2p.condominium.exception.CondominiumExceptionHandler;
+import com.p2p.condominium.mapper.AddressMapper;
 import com.p2p.condominium.mapper.PaginatedResponseMapper;
+import com.p2p.condominium.mapper.PhoneMapper;
 import com.p2p.condominium.mapper.StackHolderMapper;
 import com.p2p.condominium.service.StackHolderService;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mapstruct.factory.Mappers;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.util.ReflectionTestUtils;
 import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 import static com.p2p.condominium.constant.ErrorConstant.REQUEST_CNPJ_INVALIDO;
 import static com.p2p.condominium.constant.ErrorConstant.REQUEST_CPF_INVALIDO;
@@ -27,6 +35,7 @@ import static com.p2p.condominium.constant.ErrorConstant.REQUEST_ID_REQUIRED;
 import static com.p2p.condominium.constant.ErrorConstant.REQUEST_NAME_REQUIRED;
 import static com.p2p.condominium.enums.TypePersonEnum.FISICA;
 import static java.util.UUID.randomUUID;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -38,19 +47,27 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 @WebFluxTest(controllers = StackHolderController.class)
 public class StackHolderControllerTest extends ControllerTest {
 
+    @InjectMocks
+    private StackHolderController controller;
+
     @MockBean
     private StackHolderService service;
-
-    @MockBean
-    private StackHolderMapper stackHolderMapper;
-
-    @MockBean
-    private PaginatedResponseMapper paginatedResponseMapper;
 
     private static final String STACKHOLDER_URL = "/v1/stackholder";
     private static final String STACKHOLDER_URL_ID = STACKHOLDER_URL.concat("/{id}");
 
     private static final String INVALID_EMAIL = "email";
+
+    @Before
+    public void setup() {
+        var stackHolderMapper = Mappers.getMapper(StackHolderMapper.class);
+        var phoneMapper = Mappers.getMapper(PhoneMapper.class);
+        var addressMapper = Mappers.getMapper(AddressMapper.class);
+        ReflectionTestUtils.setField(stackHolderMapper, "addressMapper", addressMapper);
+        ReflectionTestUtils.setField(stackHolderMapper, "phoneMapper", phoneMapper);
+        ReflectionTestUtils.setField(controller, "stackHolderMapper", stackHolderMapper);
+        ReflectionTestUtils.setField(controller, "service", service);
+    }
 
     @Test
     public void testListSuccess() {
@@ -65,11 +82,8 @@ public class StackHolderControllerTest extends ControllerTest {
     @Test
     public void getByIdSuccessTest() {
         when(service.findById(any())).thenReturn(Mono.just(getResponse().build()));
-        this.client.get()
-                .uri(STACKHOLDER_URL_ID, randomUUID().toString())
-                .exchange()
-                .expectStatus()
-                .isOk();
+        final var result = controller.getById(UUID.randomUUID().toString());
+        StepVerifier.create(result).assertNext(response -> assertNotNull(response)).verifyComplete();
     }
 
     @Test
@@ -89,14 +103,8 @@ public class StackHolderControllerTest extends ControllerTest {
     public void updateSuccessTest() {
         var request = getUpdateRequest().build();
         when(service.update(any())).thenReturn(Mono.just(StackHolderDocument.builder().build()));
-
-        this.client.put()
-                .uri(STACKHOLDER_URL)
-                .contentType(APPLICATION_JSON)
-                .body(Mono.just(request), StackHolderUpdateRequest.class)
-                .exchange()
-                .expectStatus()
-                .isAccepted();
+        final var result = controller.update(request);
+        StepVerifier.create(result).assertNext(response -> assertNotNull(response)).verifyComplete();
     }
 
     @Test
@@ -116,14 +124,8 @@ public class StackHolderControllerTest extends ControllerTest {
     public void insertSuccessTest() {
         var request = getInsertRequest().build();
         when(service.insert(any())).thenReturn(Mono.just(StackHolderDocument.builder().build()));
-
-        this.client.post()
-                .uri(STACKHOLDER_URL)
-                .contentType(APPLICATION_JSON)
-                .body(Mono.just(request), StackHolderInsertRequest.class)
-                .exchange()
-                .expectStatus()
-                .isCreated();
+        final var result = controller.insert(request);
+        StepVerifier.create(result).assertNext(response -> assertNotNull(response)).verifyComplete();
     }
 
     @Test
