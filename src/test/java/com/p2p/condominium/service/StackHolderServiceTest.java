@@ -47,21 +47,14 @@ public class StackHolderServiceTest {
 
     @Mock
     private StackHolderRepository repository;
-
-    private StackHolderMapper stackHolderMapper;
-
-    private PaginatedResponseMapper paginatedResponseMapper;
-
-    private AddressMapper addressMapper;
-
-    private PhoneMapper phoneMapper;
+    
 
     @Before
     public void before() {
-        stackHolderMapper = Mappers.getMapper(StackHolderMapper.class);
-        paginatedResponseMapper = Mappers.getMapper(PaginatedResponseMapper.class);
-        phoneMapper = Mappers.getMapper(PhoneMapper.class);
-        addressMapper = Mappers.getMapper(AddressMapper.class);
+        var stackHolderMapper = Mappers.getMapper(StackHolderMapper.class);
+        var paginatedResponseMapper = Mappers.getMapper(PaginatedResponseMapper.class);
+        var phoneMapper = Mappers.getMapper(PhoneMapper.class);
+        var addressMapper = Mappers.getMapper(AddressMapper.class);
         ReflectionTestUtils.setField(stackHolderMapper, "addressMapper", addressMapper);
         ReflectionTestUtils.setField(stackHolderMapper, "phoneMapper", phoneMapper);
         ReflectionTestUtils.setField(service, "stackHolderMapper", stackHolderMapper);
