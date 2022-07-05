@@ -38,7 +38,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
-import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = {CondominiumController.class, CondominiumExceptionHandler.class})
@@ -57,7 +56,7 @@ public class CondominiumControllerTest extends ControllerTest {
 
     @Before
     public void setup() {
-        var  condominiumMapper = Mappers.getMapper(CondominiumMapper.class);
+        var condominiumMapper = Mappers.getMapper(CondominiumMapper.class);
         var addressMapper = Mappers.getMapper(AddressMapper.class);
         var condominiumManagerMapper = Mappers.getMapper(CondominiumManagerMapper.class);
         ReflectionTestUtils.setField(condominiumMapper, "addressMapper", addressMapper);

@@ -37,7 +37,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = {StackHolderMapper.class, PaginatedResponseMapper.class, AddressMapper.class, PhoneMapper.class})
+@SpringBootTest
 public class StackHolderServiceTest {
 
     @InjectMocks
