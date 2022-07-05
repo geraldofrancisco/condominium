@@ -80,11 +80,8 @@ public class StackHolderServiceImpl implements StackHolderService {
         return this.repository.count().flatMap(total ->
                 this.repository.findByIdNotNullOrderByNameAsc(pageable)
                         .collectList()
-                        .flatMap(list -> {
-                            var shList = stackHolderMapper.toResponse(list);
-                            var x = paginatedResponseMapper.toPaginator(shList, pageable.getPageNumber(), pageable.getPageSize(), total);
-                            return Mono.just(x);
-                        })
+                        .flatMap(list -> Mono.just(paginatedResponseMapper
+                                .toPaginator(stackHolderMapper.toResponse(list), pageable.getPageNumber(), pageable.getPageSize(), total))                        )
         );
 
     }
