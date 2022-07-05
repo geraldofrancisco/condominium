@@ -6,14 +6,22 @@ import com.p2p.condominium.dto.Address;
 import com.p2p.condominium.dto.CondominiumDTO;
 import com.p2p.condominium.dto.CondominiumUpdateRequest;
 import com.p2p.condominium.exception.CondominiumExceptionHandler;
+import com.p2p.condominium.mapper.AddressMapper;
+import com.p2p.condominium.mapper.CondominiumManagerMapper;
+import com.p2p.condominium.mapper.CondominiumMapper;
 import com.p2p.condominium.service.CondominiumService;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mapstruct.factory.Mappers;
+import org.mockito.InjectMocks;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.util.ReflectionTestUtils;
 import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
 
 import java.util.UUID;
 
@@ -25,6 +33,7 @@ import static com.p2p.condominium.constant.ErrorConstant.REQUEST_ID_REQUIRED;
 import static com.p2p.condominium.constant.ErrorConstant.REQUEST_NAME_REQUIRED;
 import static com.p2p.condominium.enums.StateEnum.MG;
 import static java.util.UUID.randomUUID;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -36,12 +45,26 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 @WebFluxTest(controllers = CondominiumController.class)
 public class CondominiumControllerTest extends ControllerTest {
 
+    @InjectMocks
+    private CondominiumController controller;
+
     @MockBean
     private CondominiumService service;
 
     private static final String CONDOMINIUM_URL = "/v1/condominium";
 
     private static final String CONDOMINIUM_URL_ID = CONDOMINIUM_URL.concat("/{id}");
+
+    @Before
+    public void setup() {
+        var  condominiumMapper = Mappers.getMapper(CondominiumMapper.class);
+        var addressMapper = Mappers.getMapper(AddressMapper.class);
+        var condominiumManagerMapper = Mappers.getMapper(CondominiumManagerMapper.class);
+        ReflectionTestUtils.setField(condominiumMapper, "addressMapper", addressMapper);
+        ReflectionTestUtils.setField(condominiumMapper, "condominiumManagerMapper", condominiumManagerMapper);
+        ReflectionTestUtils.setField(controller, "condominiumMapper", condominiumMapper);
+        ReflectionTestUtils.setField(controller, "service", service);
+    }
 
     @Test
     public void testListSuccess() {
@@ -56,38 +79,26 @@ public class CondominiumControllerTest extends ControllerTest {
     @Test
     public void getByIdSuccessTest() {
         when(service.findById(any())).thenReturn(Mono.just(getResponse().build()));
-        this.client.get()
-                .uri(CONDOMINIUM_URL_ID, randomUUID().toString())
-                .exchange()
-                .expectStatus()
-                .isOk();
+        final var result = controller.getById(UUID.randomUUID().toString());
+        StepVerifier.create(result).assertNext(response -> assertNotNull(response)).verifyComplete();
     }
 
     @Test
     public void insertSuccessTest() {
         when(service.insert(any())).thenReturn(Mono.just(getResponse().build()));
 
-        this.client.post()
-                .uri(CONDOMINIUM_URL)
-                .contentType(APPLICATION_JSON)
-                .body(Mono.just(getRequest().build()), CondominiumDTO.class)
-                .exchange()
-                .expectStatus()
-                .isCreated();
+        final var result = controller.insert(getRequest().build());
+        StepVerifier.create(result).assertNext(response -> assertNotNull(response)).verifyComplete();
     }
 
     @Test
     public void updateSuccessTest() {
-        var request = getRequest().id(UUID.randomUUID().toString()).build();
+        var request = new CondominiumUpdateRequest();
+        request.setId(UUID.randomUUID().toString());
         when(service.update(any())).thenReturn(Mono.just(getResponse().build()));
 
-        this.client.put()
-                .uri(CONDOMINIUM_URL)
-                .contentType(APPLICATION_JSON)
-                .body(Mono.just(request), CondominiumDTO.class)
-                .exchange()
-                .expectStatus()
-                .isAccepted();
+        final var result = controller.update(request);
+        StepVerifier.create(result).assertNext(response -> assertNotNull(response)).verifyComplete();
     }
 
     @Test
