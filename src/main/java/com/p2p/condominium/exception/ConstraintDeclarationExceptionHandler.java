@@ -2,7 +2,6 @@ package com.p2p.condominium.exception;
 
 import com.p2p.condominium.dto.ExceptionResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
