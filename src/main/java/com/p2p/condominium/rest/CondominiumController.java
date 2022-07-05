@@ -1,10 +1,10 @@
 package com.p2p.condominium.rest;
 
-import com.p2p.condominium.builder.CondominiumBuilder;
 import com.p2p.condominium.dto.CondominiumDTO;
 import com.p2p.condominium.dto.CondominiumResponse;
 import com.p2p.condominium.dto.CondominiumUpdateRequest;
 import com.p2p.condominium.dto.PaginatedResponse;
+import com.p2p.condominium.mapper.CondominiumMapper;
 import com.p2p.condominium.service.CondominiumService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
@@ -37,6 +37,8 @@ import static org.springframework.http.HttpStatus.OK;
 public class CondominiumController {
     private final CondominiumService service;
 
+    private CondominiumMapper condominiumMapper;
+
     @GetMapping
     @ResponseStatus(OK)
     public Mono<PaginatedResponse> list(
@@ -50,21 +52,21 @@ public class CondominiumController {
     @ResponseStatus(OK)
     public Mono<CondominiumResponse> getById(@PathVariable String id) {
         return this.service.findById(id)
-                .map(CondominiumBuilder::toResponse);
+                .map(condominiumMapper::toResponse);
     }
 
     @PostMapping
     @ResponseStatus(CREATED)
     public Mono<CondominiumResponse> insert(@Valid @RequestBody CondominiumDTO request) {
         return service.insert(request)
-                .map(CondominiumBuilder::toResponse);
+                .map(condominiumMapper::toResponse);
     }
 
     @PutMapping
     @ResponseStatus(ACCEPTED)
     public Mono<CondominiumResponse> update(@Valid @RequestBody CondominiumUpdateRequest request) {
         return service.update(request)
-                .map(CondominiumBuilder::toResponse);
+                .map(condominiumMapper::toResponse);
     }
 
     @DeleteMapping("/{id}")

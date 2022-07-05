@@ -1,11 +1,11 @@
 package com.p2p.condominium.rest;
 
-import com.p2p.condominium.builder.StackHolderBuilder;
 import com.p2p.condominium.dto.PaginatedResponse;
 import com.p2p.condominium.dto.StackHolderInsertRequest;
 import com.p2p.condominium.dto.StackHolderResponse;
 import com.p2p.condominium.dto.StackHolderUpdateRequest;
 import com.p2p.condominium.exception.BusinessException;
+import com.p2p.condominium.mapper.StackHolderMapper;
 import com.p2p.condominium.service.StackHolderService;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
@@ -41,6 +41,8 @@ public class StackHolderController {
 
     private final StackHolderService service;
 
+    private StackHolderMapper stackHolderMapper;
+
     @GetMapping
     @ResponseStatus(OK)
     public Mono<PaginatedResponse> list(
@@ -54,7 +56,7 @@ public class StackHolderController {
     @ResponseStatus(OK)
     public Mono<StackHolderResponse> getById(@PathVariable String id) {
         return this.service.findById(id)
-                .map(StackHolderBuilder::toResponse);
+                .map(stackHolderMapper::toResponse);
     }
 
     @PostMapping
@@ -64,7 +66,7 @@ public class StackHolderController {
             return Mono.error(new BusinessException(CNPJ_OR_CPF_REQUIRED));
 
         return service.insert(request)
-                .map(StackHolderBuilder::toResponse);
+                .map(stackHolderMapper::toResponse);
     }
 
     @PutMapping
@@ -74,7 +76,7 @@ public class StackHolderController {
             return Mono.error(new BusinessException(CNPJ_OR_CPF_REQUIRED));
 
         return service.update(request)
-                .map(StackHolderBuilder::toResponse);
+                .map(stackHolderMapper::toResponse);
     }
 
     @DeleteMapping("/{id}")
