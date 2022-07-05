@@ -5,16 +5,25 @@ import com.p2p.condominium.document.StackHolderDocument;
 import com.p2p.condominium.dto.Address;
 import com.p2p.condominium.dto.StackHolderInsertRequest;
 import com.p2p.condominium.dto.StackHolderUpdateRequest;
-import com.p2p.condominium.enums.TypePersonEnum;
 import com.p2p.condominium.exception.BusinessException;
+import com.p2p.condominium.mapper.AddressMapper;
+import com.p2p.condominium.mapper.PaginatedResponseMapper;
+import com.p2p.condominium.mapper.PhoneMapper;
+import com.p2p.condominium.mapper.StackHolderMapper;
 import com.p2p.condominium.repository.StackHolderRepository;
 import com.p2p.condominium.service.impl.StackHolderServiceImpl;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mapstruct.factory.Mappers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.Spy;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.util.ReflectionTestUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
@@ -30,6 +39,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
+@SpringBootTest(classes = {StackHolderMapper.class, PaginatedResponseMapper.class, AddressMapper.class, PhoneMapper.class})
 public class StackHolderServiceTest {
 
     @InjectMocks
@@ -38,11 +48,32 @@ public class StackHolderServiceTest {
     @Mock
     private StackHolderRepository repository;
 
+    private StackHolderMapper stackHolderMapper;
+
+    private PaginatedResponseMapper paginatedResponseMapper;
+
+    private AddressMapper addressMapper;
+
+    private PhoneMapper phoneMapper;
+
+    @Before
+    public void before() {
+        stackHolderMapper = Mappers.getMapper(StackHolderMapper.class);
+        paginatedResponseMapper = Mappers.getMapper(PaginatedResponseMapper.class);
+        phoneMapper = Mappers.getMapper(PhoneMapper.class);
+        addressMapper = Mappers.getMapper(AddressMapper.class);
+        ReflectionTestUtils.setField(stackHolderMapper, "addressMapper", addressMapper);
+        ReflectionTestUtils.setField(stackHolderMapper, "phoneMapper", phoneMapper);
+        ReflectionTestUtils.setField(service, "stackHolderMapper", stackHolderMapper);
+        ReflectionTestUtils.setField(service, "paginatedResponseMapper", paginatedResponseMapper);
+    }
+
     @Test
     public void findAllSuccess() {
         var pageable = PageRequest.of(0, 1);
         when(repository.count()).thenReturn(Mono.just(1L));
         when(repository.findByIdNotNullOrderByNameAsc(pageable)).thenReturn(Flux.just(getDocumentReturn().build()));
+
         final var result = this.service.findAll(pageable);
         StepVerifier.create(result).assertNext(response -> assertNotNull(response)).verifyComplete();
     }

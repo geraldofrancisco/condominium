@@ -4,6 +4,7 @@ import com.p2p.condominium.document.StackHolderDocument;
 import com.p2p.condominium.dto.StackHolderInsertRequest;
 import com.p2p.condominium.dto.StackHolderResponse;
 import com.p2p.condominium.dto.StackHolderUpdateRequest;
+import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

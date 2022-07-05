@@ -10,6 +10,7 @@ import com.p2p.condominium.mapper.StackHolderMapper;
 import com.p2p.condominium.repository.StackHolderRepository;
 import com.p2p.condominium.service.StackHolderService;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
@@ -30,6 +31,7 @@ public class StackHolderServiceImpl implements StackHolderService {
     private StackHolderRepository repository;
 
     private PaginatedResponseMapper paginatedResponseMapper;
+
 
     private StackHolderMapper stackHolderMapper;
 
@@ -78,8 +80,11 @@ public class StackHolderServiceImpl implements StackHolderService {
         return this.repository.count().flatMap(total ->
                 this.repository.findByIdNotNullOrderByNameAsc(pageable)
                         .collectList()
-                        .flatMap(list -> Mono.just(paginatedResponseMapper
-                                .toPaginator(stackHolderMapper.toResponse(list), pageable.getPageNumber(), pageable.getPageSize(), total)))
+                        .flatMap(list -> {
+                            var shList = stackHolderMapper.toResponse(list);
+                            var x = paginatedResponseMapper.toPaginator(shList, pageable.getPageNumber(), pageable.getPageSize(), total);
+                            return Mono.just(x);
+                        })
         );
 
     }

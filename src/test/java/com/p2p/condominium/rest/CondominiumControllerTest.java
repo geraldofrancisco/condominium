@@ -5,7 +5,7 @@ import com.p2p.condominium.document.CondominiumDocument;
 import com.p2p.condominium.dto.Address;
 import com.p2p.condominium.dto.CondominiumDTO;
 import com.p2p.condominium.dto.CondominiumUpdateRequest;
-import com.p2p.condominium.exception.BusinessExceptionHandler;
+import com.p2p.condominium.exception.CondominiumExceptionHandler;
 import com.p2p.condominium.service.CondominiumService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,7 +32,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 @RunWith(SpringRunner.class)
-@ContextConfiguration(classes = {CondominiumController.class, BusinessExceptionHandler.class})
+@ContextConfiguration(classes = {CondominiumController.class, CondominiumExceptionHandler.class})
 @WebFluxTest(controllers = CondominiumController.class)
 public class CondominiumControllerTest extends ControllerTest {
 

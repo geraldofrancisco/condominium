@@ -2,20 +2,19 @@ package com.p2p.condominium.rest;
 
 import com.p2p.condominium.document.AddressDocument;
 import com.p2p.condominium.document.StackHolderDocument;
-import com.p2p.condominium.dto.PaginatedResponse;
 import com.p2p.condominium.dto.StackHolderInsertRequest;
 import com.p2p.condominium.dto.StackHolderUpdateRequest;
-import com.p2p.condominium.exception.BusinessExceptionHandler;
-import com.p2p.condominium.repository.StackHolderRepository;
+import com.p2p.condominium.exception.CondominiumExceptionHandler;
+import com.p2p.condominium.mapper.PaginatedResponseMapper;
+import com.p2p.condominium.mapper.StackHolderMapper;
 import com.p2p.condominium.service.StackHolderService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.mockito.Mock;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
@@ -35,12 +34,18 @@ import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 @RunWith(SpringRunner.class)
-@ContextConfiguration(classes = {StackHolderController.class, BusinessExceptionHandler.class})
+@ContextConfiguration(classes = {StackHolderController.class, CondominiumExceptionHandler.class})
 @WebFluxTest(controllers = StackHolderController.class)
 public class StackHolderControllerTest extends ControllerTest {
 
     @MockBean
     private StackHolderService service;
+
+    @MockBean
+    private StackHolderMapper stackHolderMapper;
+
+    @MockBean
+    private PaginatedResponseMapper paginatedResponseMapper;
 
     private static final String STACKHOLDER_URL = "/v1/stackholder";
     private static final String STACKHOLDER_URL_ID = STACKHOLDER_URL.concat("/{id}");
