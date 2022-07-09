@@ -41,7 +41,7 @@ public class StackHolderController {
 
     private final StackHolderService service;
 
-    private StackHolderMapper stackHolderMapper;
+    private final StackHolderMapper stackHolderMapper;
 
     @GetMapping
     @ResponseStatus(OK)
