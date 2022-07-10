@@ -20,6 +20,7 @@ import org.junit.runner.RunWith;
 import org.mapstruct.factory.Mappers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.PageRequest;
@@ -47,8 +48,8 @@ public class CondominiumServiceTest {
     @InjectMocks
     private CondominiumServiceImpl service;
 
-    @MockBean
-    private StackHolderServiceImpl stackHolderService;
+    @Spy
+    private StackHolderService stackHolderService;
 
     @Mock
     private CondominiumRepository repository;
@@ -66,6 +67,18 @@ public class CondominiumServiceTest {
         ReflectionTestUtils.setField(condominiumMapper, "condominiumManagerMapper", condominiumManagerMapper);
         ReflectionTestUtils.setField(service, "paginatedResponseMapper", paginatedResponseMapper);
         ReflectionTestUtils.setField(service, "condominiumMapper", condominiumMapper);
+    }
+
+    @Test
+    public void insertSuccessTest() {
+        var stackHolderDocument = getStackHolderDocumentReturn().build();
+        var condominiumDocument = getCondominiumDocument().build();
+        when(repository.findByIdentification(anyString())).thenReturn(Mono.empty());
+        when(stackHolderService.findByLegalPersonAndId(anyString())).thenReturn(Mono.just(stackHolderDocument));
+        when(repository.save(any()))
+                .thenReturn(Mono.just(getCondominiumDocument().id(UUID.randomUUID().toString()).build()));
+        var result = this.service.insert(getCondominiumDTO().build());
+        StepVerifier.create(result).assertNext(response -> assertNotNull(response)).verifyComplete();
     }
 
     @Test
