@@ -72,12 +72,23 @@ public class CondominiumServiceTest {
     @Test
     public void insertSuccessTest() {
         var stackHolderDocument = getStackHolderDocumentReturn().build();
-        var condominiumDocument = getCondominiumDocument().build();
         when(repository.findByIdentification(anyString())).thenReturn(Mono.empty());
         when(stackHolderService.findByLegalPersonAndId(anyString())).thenReturn(Mono.just(stackHolderDocument));
         when(repository.save(any()))
                 .thenReturn(Mono.just(getCondominiumDocument().id(UUID.randomUUID().toString()).build()));
         var result = this.service.insert(getCondominiumDTO().build());
+        StepVerifier.create(result).assertNext(response -> assertNotNull(response)).verifyComplete();
+    }
+
+    @Test
+    public void updateSuccessTest() {
+        var stackHolderDocument = getStackHolderDocumentReturn().build();
+        var condominiumDocument = getCondominiumDocument().id(UUID.randomUUID().toString()).build();
+        when(repository.findById(anyString())).thenReturn(Mono.just(condominiumDocument));
+        when(stackHolderService.findByLegalPersonAndId(anyString())).thenReturn(Mono.just(stackHolderDocument));
+        when(repository.save(any()))
+                .thenReturn(Mono.just(getCondominiumDocument().id(UUID.randomUUID().toString()).build()));
+        var result = this.service.update(getCondominiumDTO().id(UUID.randomUUID().toString()).build());
         StepVerifier.create(result).assertNext(response -> assertNotNull(response)).verifyComplete();
     }
 
