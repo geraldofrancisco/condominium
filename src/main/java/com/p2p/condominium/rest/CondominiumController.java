@@ -37,7 +37,7 @@ import static org.springframework.http.HttpStatus.OK;
 public class CondominiumController {
     private final CondominiumService service;
 
-    private CondominiumMapper condominiumMapper;
+    private final CondominiumMapper condominiumMapper;
 
     @GetMapping
     @ResponseStatus(OK)
