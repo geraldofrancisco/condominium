@@ -36,6 +36,7 @@ import static com.p2p.condominium.enums.TypePersonEnum.FISICA;
 import static com.p2p.condominium.enums.TypePersonEnum.JURIDICA;
 import static java.util.UUID.randomUUID;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
@@ -93,7 +94,14 @@ public class CondominiumServiceTest {
         StepVerifier.create(result).assertNext(response -> assertNotNull(response)).verifyComplete();
     }
 
-
+    @Test
+    public void deleteSuccessTest() {
+        var document = getCondominiumDocument().build();
+        when(repository.findById(anyString())).thenReturn(Mono.just(document));
+        when(repository.delete(any())).thenReturn(Mono.empty().then());
+        final var result = this.service.delete(anyString());
+        StepVerifier.create(result).expectComplete().verify();
+    }
 
     private CondominiumDocument.CondominiumDocumentBuilder getCondominiumDocument() {
         return CondominiumDocument.builder()
