@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.bind.support.WebExchangeBindException;
+import org.springframework.web.server.ServerWebInputException;
 import reactor.core.publisher.Mono;
 
 import javax.validation.ConstraintDeclarationException;
@@ -33,6 +34,13 @@ public class CondominiumExceptionHandler {
             (final ConstraintDeclarationException ex) {
         log.error("There was a constraint error: {}", ex.getMessage());
         return this.getExceptionResponse(BAD_REQUEST,  ex.getMessage());
+    }
+
+    @ExceptionHandler({ServerWebInputException.class})
+    public Mono<ResponseEntity<ExceptionResponse>> handleServerWebInputException
+            (final ServerWebInputException ex) {
+        log.error("There was a constraint error: {}", ex.getReason());
+        return this.getExceptionResponse(BAD_REQUEST,  ex.getReason());
     }
 
     @ExceptionHandler({WebExchangeBindException.class})
