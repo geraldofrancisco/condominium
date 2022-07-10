@@ -5,7 +5,9 @@ import org.mapstruct.Mapper;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring")
+import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
+
+@Mapper(componentModel = SPRING)
 public interface PaginatedResponseMapper {
     PaginatedResponse toPaginator(List content, Integer page, Integer size, Long totalRecords);
 }

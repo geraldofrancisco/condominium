@@ -4,7 +4,9 @@ import com.p2p.condominium.document.CondominiumManagerDocument;
 import com.p2p.condominium.dto.CondominiumManagerResponse;
 import org.mapstruct.Mapper;
 
-@Mapper(componentModel = "spring")
+import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
+
+@Mapper(componentModel = SPRING)
 public interface CondominiumManagerMapper {
     CondominiumManagerResponse toResponse(CondominiumManagerDocument document);
 }

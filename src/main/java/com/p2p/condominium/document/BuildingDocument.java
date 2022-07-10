@@ -33,7 +33,7 @@ public class BuildingDocument{
     private Integer numberOfParkingApartment;
 
     @Field("temElevador")
-    private Boolean containsElevator;
+    private boolean containsElevator;
 
     @Field("apartamentos")
     private List<String> apartments;

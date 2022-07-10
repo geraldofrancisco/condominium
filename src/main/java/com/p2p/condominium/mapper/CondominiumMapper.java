@@ -8,7 +8,9 @@ import org.mapstruct.Mapping;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring", uses = {AddressMapper.class, CondominiumManagerMapper.class})
+import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
+
+@Mapper(componentModel = SPRING, uses = {AddressMapper.class, CondominiumManagerMapper.class})
 public interface CondominiumMapper {
     List<CondominiumDocument> toDocument(List<CondominiumDTO> list);
 
