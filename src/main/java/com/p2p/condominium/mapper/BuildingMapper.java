@@ -2,7 +2,9 @@ package com.p2p.condominium.mapper;
 
 import com.p2p.condominium.document.BuildingDocument;
 import com.p2p.condominium.dto.BuildingDTO;
+import com.p2p.condominium.dto.BuildingInsertRequest;
 import com.p2p.condominium.dto.BuildingResponse;
+import com.p2p.condominium.dto.BuildingUpdateRequest;
 import org.mapstruct.Mapper;
 
 import java.util.List;
@@ -20,4 +22,7 @@ public interface BuildingMapper {
 
     BuildingResponse toResponse(BuildingDocument document);
     List<BuildingResponse> toResponse(List<BuildingDocument> list);
+
+    BuildingDTO toDTO(BuildingInsertRequest request);
+    BuildingDTO toDTO(BuildingUpdateRequest request);
 }

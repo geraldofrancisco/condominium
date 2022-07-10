@@ -19,10 +19,8 @@ import static com.p2p.condominium.constant.ErrorConstant.BUILDING_NAME_CONDOMINI
 public class BuildingDTO {
     private String id;
 
-    @NotBlank(message = BUILDING_CONDOMINIUM_REQUIRED)
     private String condominium;
 
-    @NotBlank(message = BUILDING_NAME_CONDOMINIUM_REQUIRED)
     private String name;
 
     private Integer numberOfFloors;

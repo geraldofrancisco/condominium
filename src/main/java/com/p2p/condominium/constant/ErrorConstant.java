@@ -28,5 +28,6 @@ public class ErrorConstant {
     public static final String BUILDING_NUMBER_OF_FLOORS_REQUIRED = "A quantidade de andares é obrigatória";
     public static final String BUILDING_NUMBER_OF_APARTAMENTS_PER_FLOOR_REQUIRED = "A quantidade de apartamentos é obrigatória";
     public static final String BUILDING_NUMBER_OF_PARKING_APARTMENT_REQUIRED = "A quantidade de vagas é obrigatória";
+    public static final String BUILDING_ID_NOT_EXIST = "O prédio informado não existe";
 
 }

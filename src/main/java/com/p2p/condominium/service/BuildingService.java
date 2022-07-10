@@ -8,7 +8,12 @@ import reactor.core.publisher.Mono;
 
 public interface BuildingService {
     Mono<BuildingDocument> insert(BuildingDTO request);
+
     Mono<BuildingDocument> update(BuildingDTO request);
+
     Mono<BuildingDocument> findById(String id);
+
     Mono<PaginatedResponse> findAll(Pageable pageable, String condominium);
+
+    Mono<Void> delete(String id);
 }

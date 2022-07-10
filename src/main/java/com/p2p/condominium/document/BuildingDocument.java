@@ -13,7 +13,7 @@ import java.util.List;
 @Data
 @ToString
 @Document(collection = "predio")
-public class BuildingDocument{
+public class BuildingDocument extends BaseDocument{
     @Id
     private String id;
 
