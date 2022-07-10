@@ -54,9 +54,6 @@ public class CondominiumServiceTest {
     @Mock
     private CondominiumRepository repository;
 
-    @Mock
-    private StackHolderRepository stackHolderRepository;
-
     @Before
     public void setup() {
         var paginatedResponseMapper = Mappers.getMapper(PaginatedResponseMapper.class);
