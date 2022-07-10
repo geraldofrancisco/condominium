@@ -11,9 +11,7 @@ import com.p2p.condominium.mapper.CondominiumManagerMapper;
 import com.p2p.condominium.mapper.CondominiumMapper;
 import com.p2p.condominium.mapper.PaginatedResponseMapper;
 import com.p2p.condominium.repository.CondominiumRepository;
-import com.p2p.condominium.repository.StackHolderRepository;
 import com.p2p.condominium.service.impl.CondominiumServiceImpl;
-import com.p2p.condominium.service.impl.StackHolderServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,7 +20,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -34,7 +31,6 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 import static com.p2p.condominium.enums.TypePersonEnum.FISICA;
-import static com.p2p.condominium.enums.TypePersonEnum.JURIDICA;
 import static java.util.UUID.randomUUID;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
@@ -151,7 +147,4 @@ public class CondominiumServiceTest {
                 .typePersonEnum(FISICA)
                 .phones(new ArrayList<>());
     }
-
-
-
 }
