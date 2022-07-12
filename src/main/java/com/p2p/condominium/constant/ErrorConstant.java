@@ -32,4 +32,6 @@ public class ErrorConstant {
 
     public static final String BUILDING_EXISTS_APARTMENTS_NOT_DELETE = "O prédio informado contém apartamentos, por isso não pode ser excluído";
 
+    public static final String CONDOMINIUM_EXISTS_BUILDING_NOT_DELETE = "O condomínio informado contém prédios, por isso não pode ser excluído";
+
 }

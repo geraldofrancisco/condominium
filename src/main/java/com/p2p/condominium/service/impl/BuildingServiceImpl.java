@@ -74,6 +74,11 @@ public class BuildingServiceImpl implements BuildingService {
                 .flatMap(this.repository::delete);
     }
 
+    @Override
+    public Mono<Boolean> existsByCondominium(String condominium) {
+        return this.repository.existsByCondominium(condominium);
+    }
+
     public Mono<BuildingDocument> validatesIfYouCanDelete(BuildingDocument document) {
         return this.apartmentService.existsByBuilding(document.getId())
                 .flatMap(exists -> {

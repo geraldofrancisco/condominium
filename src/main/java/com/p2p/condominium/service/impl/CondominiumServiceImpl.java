@@ -7,6 +7,7 @@ import com.p2p.condominium.exception.BusinessException;
 import com.p2p.condominium.mapper.CondominiumMapper;
 import com.p2p.condominium.mapper.PaginatedResponseMapper;
 import com.p2p.condominium.repository.CondominiumRepository;
+import com.p2p.condominium.service.BuildingService;
 import com.p2p.condominium.service.CondominiumService;
 import com.p2p.condominium.service.StackHolderService;
 import lombok.AllArgsConstructor;
@@ -14,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
+import static com.p2p.condominium.constant.ErrorConstant.CONDOMINIUM_EXISTS_BUILDING_NOT_DELETE;
 import static com.p2p.condominium.constant.ErrorConstant.ID_NOT_EXIST;
 import static com.p2p.condominium.util.BaseDocumentUtil.insertInformation;
 import static com.p2p.condominium.util.BaseDocumentUtil.updateInformation;
@@ -30,6 +32,8 @@ public class CondominiumServiceImpl implements CondominiumService {
     private PaginatedResponseMapper paginatedResponseMapper;
 
     private CondominiumMapper condominiumMapper;
+
+    private BuildingService buildingService;
 
     @Override
     public Mono<CondominiumDocument> insert(CondominiumDTO dto) {
@@ -60,6 +64,7 @@ public class CondominiumServiceImpl implements CondominiumService {
     @Override
     public Mono<Void> delete(String id) {
         return this.findById(id)
+                .flatMap(this::validatesIfYouCanDelete)
                 .flatMap(c -> this.repository.delete(c));
     }
 
@@ -77,5 +82,14 @@ public class CondominiumServiceImpl implements CondominiumService {
                         .flatMap(list -> Mono.just(paginatedResponseMapper
                                 .toPaginator(condominiumMapper.toDTO(list), pageable.getPageNumber(), pageable.getPageSize(), total)))
         );
+    }
+
+    private Mono<CondominiumDocument> validatesIfYouCanDelete(CondominiumDocument document) {
+        return this.buildingService.existsByCondominium(document.getId())
+                .flatMap(exists -> {
+                    if (exists)
+                        return Mono.error(new BusinessException(CONDOMINIUM_EXISTS_BUILDING_NOT_DELETE));
+                    return Mono.empty();
+                }).thenReturn(document);
     }
 }
