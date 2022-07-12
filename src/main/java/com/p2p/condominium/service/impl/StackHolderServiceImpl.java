@@ -7,15 +7,18 @@ import com.p2p.condominium.dto.StackHolderUpdateRequest;
 import com.p2p.condominium.exception.BusinessException;
 import com.p2p.condominium.mapper.PaginatedResponseMapper;
 import com.p2p.condominium.mapper.StackHolderMapper;
+import com.p2p.condominium.repository.ApartmentRepository;
+import com.p2p.condominium.repository.CondominiumRepository;
 import com.p2p.condominium.repository.StackHolderRepository;
 import com.p2p.condominium.service.StackHolderService;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
 import static com.p2p.condominium.constant.ErrorConstant.STACKHOLDER_ID_NOT_EXIST;
+import static com.p2p.condominium.constant.ErrorConstant.STACKHOLDER_IN_USE_APARTMENT;
+import static com.p2p.condominium.constant.ErrorConstant.STACKHOLDER_IN_USE_CONDOMINIUM;
 import static com.p2p.condominium.constant.ErrorConstant.STACKHOLDER_LEGAL_PERSON_ID_NOT_EXIST;
 import static com.p2p.condominium.constant.ErrorConstant.STACKHOLDER_PHYSICAL_PERSON_ID_NOT_EXIST;
 import static com.p2p.condominium.enums.TypePersonEnum.FISICA;
@@ -32,8 +35,11 @@ public class StackHolderServiceImpl implements StackHolderService {
 
     private PaginatedResponseMapper paginatedResponseMapper;
 
-
     private StackHolderMapper stackHolderMapper;
+
+    private CondominiumRepository condominiumRepository;
+
+    private ApartmentRepository apartmentRepository;
 
     @Override
     public Mono<StackHolderDocument> insert(StackHolderInsertRequest dto) {
@@ -54,6 +60,7 @@ public class StackHolderServiceImpl implements StackHolderService {
     @Override
     public Mono<Void> delete(String id) {
         return findById(id)
+                .flatMap(this::validatesIfYouCanDelete)
                 .flatMap(sh -> this.repository.delete(sh));
     }
 
@@ -84,5 +91,19 @@ public class StackHolderServiceImpl implements StackHolderService {
                                 .toPaginator(stackHolderMapper.toResponse(list), pageable.getPageNumber(), pageable.getPageSize(), total))                        )
         );
 
+    }
+
+    private Mono<StackHolderDocument> validatesIfYouCanDelete(StackHolderDocument document) {
+        return condominiumRepository.existsByConstructionCompanyOrCondominiumManagerManagerId(document.getId(), document.getId())
+                .flatMap(exist -> this.validateDelete(exist, STACKHOLDER_IN_USE_CONDOMINIUM))
+                .flatMap(x -> this.apartmentRepository.existsByOwner(document.getId()))
+                .flatMap(exist -> this.validateDelete(exist, STACKHOLDER_IN_USE_APARTMENT))
+                .thenReturn(document);
+    }
+
+    private Mono<Void> validateDelete(final Boolean exist, final String message) {
+        if(exist)
+            return Mono.error(new BusinessException(message));
+        return Mono.empty();
     }
 }

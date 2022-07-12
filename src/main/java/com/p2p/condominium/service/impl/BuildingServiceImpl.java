@@ -79,7 +79,7 @@ public class BuildingServiceImpl implements BuildingService {
         return this.repository.existsByCondominium(condominium);
     }
 
-    public Mono<BuildingDocument> validatesIfYouCanDelete(BuildingDocument document) {
+    private Mono<BuildingDocument> validatesIfYouCanDelete(BuildingDocument document) {
         return this.apartmentService.existsByBuilding(document.getId())
                 .flatMap(exists -> {
                     if (exists)

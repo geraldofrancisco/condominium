@@ -13,7 +13,7 @@ import java.util.List;
 @Data
 @ToString
 @Document(collection = "predio")
-public class BuildingDocument extends BaseDocument{
+public class BuildingDocument extends BaseDocument {
     @Id
     private String id;
 
@@ -34,7 +34,4 @@ public class BuildingDocument extends BaseDocument{
 
     @Field("temElevador")
     private boolean containsElevator;
-
-    @Field("apartamentos")
-    private List<String> apartments;
 }

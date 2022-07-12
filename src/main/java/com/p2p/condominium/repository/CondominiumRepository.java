@@ -12,4 +12,5 @@ public interface CondominiumRepository extends ReactiveMongoRepository<Condomini
     Flux<CondominiumDocument> findByIdNotNullOrderByNameAsc(final Pageable page);
 
     Mono<CondominiumDocument> findByIdentification(final String name);
+    Mono<Boolean> existsByConstructionCompanyOrCondominiumManagerManagerId(String constructionCompany, String condominiumManager);
 }
