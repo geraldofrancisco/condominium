@@ -16,6 +16,4 @@ public interface BuildingService {
     Mono<PaginatedResponse> findAll(Pageable pageable, String condominium);
 
     Mono<Void> delete(String id);
-
-    Mono<Boolean> existsByCondominium(String condominium);
 }

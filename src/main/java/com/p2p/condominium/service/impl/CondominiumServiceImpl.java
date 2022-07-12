@@ -6,6 +6,7 @@ import com.p2p.condominium.dto.PaginatedResponse;
 import com.p2p.condominium.exception.BusinessException;
 import com.p2p.condominium.mapper.CondominiumMapper;
 import com.p2p.condominium.mapper.PaginatedResponseMapper;
+import com.p2p.condominium.repository.BuildingRepository;
 import com.p2p.condominium.repository.CondominiumRepository;
 import com.p2p.condominium.service.BuildingService;
 import com.p2p.condominium.service.CondominiumService;
@@ -33,7 +34,7 @@ public class CondominiumServiceImpl implements CondominiumService {
 
     private CondominiumMapper condominiumMapper;
 
-    private BuildingService buildingService;
+    private BuildingRepository buildingRepository;
 
     @Override
     public Mono<CondominiumDocument> insert(CondominiumDTO dto) {
@@ -85,7 +86,7 @@ public class CondominiumServiceImpl implements CondominiumService {
     }
 
     private Mono<CondominiumDocument> validatesIfYouCanDelete(CondominiumDocument document) {
-        return this.buildingService.existsByCondominium(document.getId())
+        return this.buildingRepository.existsByCondominium(document.getId())
                 .flatMap(exists -> {
                     if (exists)
                         return Mono.error(new BusinessException(CONDOMINIUM_EXISTS_BUILDING_NOT_DELETE));

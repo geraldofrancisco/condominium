@@ -6,6 +6,7 @@ import com.p2p.condominium.dto.PaginatedResponse;
 import com.p2p.condominium.exception.BusinessException;
 import com.p2p.condominium.mapper.BuildingMapper;
 import com.p2p.condominium.mapper.PaginatedResponseMapper;
+import com.p2p.condominium.repository.ApartmentRepository;
 import com.p2p.condominium.repository.BuildingRepository;
 import com.p2p.condominium.service.ApartmentService;
 import com.p2p.condominium.service.BuildingService;
@@ -34,7 +35,7 @@ public class BuildingServiceImpl implements BuildingService {
 
     private CondominiumService condominiumService;
 
-    private ApartmentService apartmentService;
+    private ApartmentRepository apartmentRepository;
 
     @Override
     public Mono<BuildingDocument> insert(BuildingDTO request) {
@@ -74,13 +75,8 @@ public class BuildingServiceImpl implements BuildingService {
                 .flatMap(this.repository::delete);
     }
 
-    @Override
-    public Mono<Boolean> existsByCondominium(String condominium) {
-        return this.repository.existsByCondominium(condominium);
-    }
-
     private Mono<BuildingDocument> validatesIfYouCanDelete(BuildingDocument document) {
-        return this.apartmentService.existsByBuilding(document.getId())
+        return this.apartmentRepository.existsByBuilding(document.getId())
                 .flatMap(exists -> {
                     if (exists)
                         return Mono.error(new BusinessException(BUILDING_EXISTS_APARTMENTS_NOT_DELETE));
