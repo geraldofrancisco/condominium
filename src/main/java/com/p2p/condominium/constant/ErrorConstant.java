@@ -30,4 +30,6 @@ public class ErrorConstant {
     public static final String BUILDING_NUMBER_OF_PARKING_APARTMENT_REQUIRED = "A quantidade de vagas é obrigatória";
     public static final String BUILDING_ID_NOT_EXIST = "O prédio informado não existe";
 
+    public static final String BUILDING_EXISTS_APARTMENTS_NOT_DELETE = "O prédio informado contém apartamentos, por isso não pode ser excluído";
+
 }

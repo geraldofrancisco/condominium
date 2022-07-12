@@ -1,7 +1,7 @@
 package com.p2p.condominium.service;
 
-import com.p2p.condominium.document.BuildingDocument;
+import reactor.core.publisher.Mono;
 
 public interface ApartmentService {
-    void createApartaments(BuildingDocument document);
+    Mono<Boolean> existsByBuilding(String building);
 }

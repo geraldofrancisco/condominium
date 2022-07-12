@@ -16,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
+import static com.p2p.condominium.constant.ErrorConstant.BUILDING_EXISTS_APARTMENTS_NOT_DELETE;
 import static com.p2p.condominium.constant.ErrorConstant.BUILDING_ID_NOT_EXIST;
 import static com.p2p.condominium.util.BaseDocumentUtil.insertInformation;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
@@ -41,15 +42,7 @@ public class BuildingServiceImpl implements BuildingService {
         insertInformation(document);
         return this.condominiumService.findById(request.getCondominium())
                 .flatMap(c -> this.repository.findByNameIgnoreCaseAndCondominium(request.getName(), request.getCondominium()))
-                .switchIfEmpty(this.createBuildingAndApartments(document));
-    }
-
-    private Mono<BuildingDocument> createBuildingAndApartments(BuildingDocument document) {
-        return this.repository.save(document)
-                .flatMap(building -> {
-                    this.apartmentService.createApartaments(building);
-                    return Mono.just(building);
-                });
+                .switchIfEmpty(this.repository.save(document));
     }
 
     @Override
@@ -77,8 +70,17 @@ public class BuildingServiceImpl implements BuildingService {
     @Override
     public Mono<Void> delete(String id) {
         return this.findById(id)
-                //TODO: Verificar se existe apartamentos vinculados, se existir gerar erro
+                .flatMap(this::validatesIfYouCanDelete)
                 .flatMap(this.repository::delete);
+    }
+
+    public Mono<BuildingDocument> validatesIfYouCanDelete(BuildingDocument document) {
+        return this.apartmentService.existsByBuilding(document.getId())
+                .flatMap(exists -> {
+                    if (exists)
+                        return Mono.error(new BusinessException(BUILDING_EXISTS_APARTMENTS_NOT_DELETE));
+                    return Mono.empty();
+                }).thenReturn(document);
     }
 
 }
