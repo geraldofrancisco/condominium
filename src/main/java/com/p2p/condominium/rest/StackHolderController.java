@@ -7,8 +7,14 @@ import com.p2p.condominium.dto.StackHolderUpdateRequest;
 import com.p2p.condominium.exception.BusinessException;
 import com.p2p.condominium.mapper.StackHolderMapper;
 import com.p2p.condominium.service.StackHolderService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.domain.Pageable;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,6 +32,13 @@ import javax.validation.Valid;
 
 import static com.p2p.condominium.constant.ControllerConstant.DEFAULT_PAGE;
 import static com.p2p.condominium.constant.ControllerConstant.DEFAULT_SIZE;
+import static com.p2p.condominium.constant.ControllerConstant.MEDIA_TYPE_JSON;
+import static com.p2p.condominium.constant.ControllerConstant.STACKHOLDER;
+import static com.p2p.condominium.constant.ControllerConstant.STACKHOLDER_DESCRIPTION;
+import static com.p2p.condominium.constant.ControllerConstant.STACKHOLDER_OPERATION_LIST_DESCRIPTION;
+import static com.p2p.condominium.constant.ControllerConstant.STACKHOLDER_OPERATION_LIST_SUMMARY;
+import static com.p2p.condominium.constant.ControllerConstant.STATUS_OK;
+import static com.p2p.condominium.constant.ControllerConstant.STATUS_OK_DESCRIPTION;
 import static com.p2p.condominium.constant.ErrorConstant.CNPJ_OR_CPF_REQUIRED;
 import static org.springframework.data.domain.PageRequest.of;
 import static org.springframework.http.HttpStatus.ACCEPTED;
@@ -36,6 +49,7 @@ import static org.springframework.http.HttpStatus.OK;
 @RestController
 @RequestMapping("/v1/stackholder")
 @RequiredArgsConstructor
+@Tag(name = STACKHOLDER, description = STACKHOLDER_DESCRIPTION)
 @Validated
 public class StackHolderController {
 
@@ -45,6 +59,20 @@ public class StackHolderController {
 
     @GetMapping
     @ResponseStatus(OK)
+    @Operation(
+            summary = STACKHOLDER_OPERATION_LIST_SUMMARY,
+            description = STACKHOLDER_OPERATION_LIST_DESCRIPTION,
+            responses = {
+                    @ApiResponse(
+                            responseCode = STATUS_OK,
+                            description = STATUS_OK_DESCRIPTION,
+                            content = @Content(
+                                    mediaType = MEDIA_TYPE_JSON,
+                                    schema = @Schema(implementation = PaginatedResponse.class)
+                            )
+                    )
+            }
+    )
     public Mono<PaginatedResponse> list(
             @RequestParam(name = "page", defaultValue = DEFAULT_PAGE, required = false) int page,
             @RequestParam(name = "size", defaultValue = DEFAULT_SIZE, required = false) int size
