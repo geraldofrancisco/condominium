@@ -19,6 +19,7 @@
         <org.mapstruct.version>1.5.2.Final</org.mapstruct.version>
         <org.projectlombok.version>1.18.24</org.projectlombok.version>
         <lombok-mapstruct.version>0.2.0</lombok-mapstruct.version>
+        <openapi.version>1.6.9</openapi.version>
     </properties>
     <dependencies>
         <dependency>
@@ -83,7 +84,7 @@
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-webflux-ui</artifactId>
-            <version>1.6.3</version>
+            <version>${openapi.version}</version>
         </dependency>
     </dependencies>
 
