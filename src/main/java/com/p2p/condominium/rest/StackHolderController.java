@@ -43,12 +43,18 @@ import static com.p2p.condominium.constant.ControllerConstant.SIZE;
 import static com.p2p.condominium.constant.ControllerConstant.SIZE_DESCRIPTION;
 import static com.p2p.condominium.constant.ControllerConstant.STACKHOLDER;
 import static com.p2p.condominium.constant.ControllerConstant.STACKHOLDER_DESCRIPTION;
+import static com.p2p.condominium.constant.ControllerConstant.STACKHOLDER_OPERATION_DELETE_DESCRIPTION;
+import static com.p2p.condominium.constant.ControllerConstant.STACKHOLDER_OPERATION_DELETE_SUMMARY;
 import static com.p2p.condominium.constant.ControllerConstant.STACKHOLDER_OPERATION_GET_ID_DESCRIPTION;
 import static com.p2p.condominium.constant.ControllerConstant.STACKHOLDER_OPERATION_GET_ID_SUMMARY;
 import static com.p2p.condominium.constant.ControllerConstant.STACKHOLDER_OPERATION_LIST_DESCRIPTION;
 import static com.p2p.condominium.constant.ControllerConstant.STACKHOLDER_OPERATION_LIST_SUMMARY;
+import static com.p2p.condominium.constant.ControllerConstant.STATUS_BAD_REQUEST;
+import static com.p2p.condominium.constant.ControllerConstant.STATUS_BAD_REQUEST_DESCRIPTION;
 import static com.p2p.condominium.constant.ControllerConstant.STATUS_NOT_FOUND;
 import static com.p2p.condominium.constant.ControllerConstant.STATUS_NOT_FOUND_DESCRIPTION;
+import static com.p2p.condominium.constant.ControllerConstant.STATUS_NO_CONTENT;
+import static com.p2p.condominium.constant.ControllerConstant.STATUS_NO_CONTENT_DESCRIPTION;
 import static com.p2p.condominium.constant.ControllerConstant.STATUS_OK;
 import static com.p2p.condominium.constant.ControllerConstant.STATUS_OK_DESCRIPTION;
 import static com.p2p.condominium.constant.ErrorConstant.CNPJ_OR_CPF_REQUIRED;
@@ -148,6 +154,33 @@ public class StackHolderController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(NO_CONTENT)
+    @Operation(
+            summary = STACKHOLDER_OPERATION_DELETE_SUMMARY,
+            description = STACKHOLDER_OPERATION_DELETE_DESCRIPTION,
+            parameters = @Parameter(name = ID, description = ID_DESCRIPTION, required = true),
+            responses = {
+                    @ApiResponse(
+                            responseCode = STATUS_NO_CONTENT,
+                            description = STATUS_NO_CONTENT_DESCRIPTION
+                    ),
+                    @ApiResponse(
+                            responseCode = STATUS_NOT_FOUND,
+                            description = STATUS_NOT_FOUND_DESCRIPTION,
+                            content = @Content(
+                                    mediaType = MEDIA_TYPE_JSON,
+                                    schema = @Schema(implementation = ExceptionResponse.class)
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = STATUS_BAD_REQUEST,
+                            description = STATUS_BAD_REQUEST_DESCRIPTION,
+                            content = @Content(
+                                    mediaType = MEDIA_TYPE_JSON,
+                                    schema = @Schema(implementation = ExceptionResponse.class)
+                            )
+                    )
+            }
+    )
     public Mono<Void> delete(@PathVariable String id) {
         return service.delete(id);
     }
