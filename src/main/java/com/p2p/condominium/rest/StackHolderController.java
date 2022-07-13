@@ -1,5 +1,6 @@
 package com.p2p.condominium.rest;
 
+import com.p2p.condominium.dto.ExceptionResponse;
 import com.p2p.condominium.dto.PaginatedResponse;
 import com.p2p.condominium.dto.StackHolderInsertRequest;
 import com.p2p.condominium.dto.StackHolderResponse;
@@ -8,6 +9,7 @@ import com.p2p.condominium.exception.BusinessException;
 import com.p2p.condominium.mapper.StackHolderMapper;
 import com.p2p.condominium.service.StackHolderService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -32,11 +34,21 @@ import javax.validation.Valid;
 
 import static com.p2p.condominium.constant.ControllerConstant.DEFAULT_PAGE;
 import static com.p2p.condominium.constant.ControllerConstant.DEFAULT_SIZE;
+import static com.p2p.condominium.constant.ControllerConstant.ID;
+import static com.p2p.condominium.constant.ControllerConstant.ID_DESCRIPTION;
 import static com.p2p.condominium.constant.ControllerConstant.MEDIA_TYPE_JSON;
+import static com.p2p.condominium.constant.ControllerConstant.PAGE;
+import static com.p2p.condominium.constant.ControllerConstant.PAGE_DESCRIPTION;
+import static com.p2p.condominium.constant.ControllerConstant.SIZE;
+import static com.p2p.condominium.constant.ControllerConstant.SIZE_DESCRIPTION;
 import static com.p2p.condominium.constant.ControllerConstant.STACKHOLDER;
 import static com.p2p.condominium.constant.ControllerConstant.STACKHOLDER_DESCRIPTION;
+import static com.p2p.condominium.constant.ControllerConstant.STACKHOLDER_OPERATION_GET_ID_DESCRIPTION;
+import static com.p2p.condominium.constant.ControllerConstant.STACKHOLDER_OPERATION_GET_ID_SUMMARY;
 import static com.p2p.condominium.constant.ControllerConstant.STACKHOLDER_OPERATION_LIST_DESCRIPTION;
 import static com.p2p.condominium.constant.ControllerConstant.STACKHOLDER_OPERATION_LIST_SUMMARY;
+import static com.p2p.condominium.constant.ControllerConstant.STATUS_NOT_FOUND;
+import static com.p2p.condominium.constant.ControllerConstant.STATUS_NOT_FOUND_DESCRIPTION;
 import static com.p2p.condominium.constant.ControllerConstant.STATUS_OK;
 import static com.p2p.condominium.constant.ControllerConstant.STATUS_OK_DESCRIPTION;
 import static com.p2p.condominium.constant.ErrorConstant.CNPJ_OR_CPF_REQUIRED;
@@ -62,6 +74,10 @@ public class StackHolderController {
     @Operation(
             summary = STACKHOLDER_OPERATION_LIST_SUMMARY,
             description = STACKHOLDER_OPERATION_LIST_DESCRIPTION,
+            parameters = {
+                    @Parameter(name = PAGE, description = PAGE_DESCRIPTION),
+                    @Parameter(name = SIZE, description = SIZE_DESCRIPTION)
+            },
             responses = {
                     @ApiResponse(
                             responseCode = STATUS_OK,
@@ -74,14 +90,37 @@ public class StackHolderController {
             }
     )
     public Mono<PaginatedResponse> list(
-            @RequestParam(name = "page", defaultValue = DEFAULT_PAGE, required = false) int page,
-            @RequestParam(name = "size", defaultValue = DEFAULT_SIZE, required = false) int size
+            @RequestParam(name = PAGE, defaultValue = DEFAULT_PAGE, required = false) int page,
+            @RequestParam(name = SIZE, defaultValue = DEFAULT_SIZE, required = false) int size
     ) {
         return this.service.findAll(of(page, size));
     }
 
     @GetMapping("/{id}")
     @ResponseStatus(OK)
+    @Operation(
+            summary = STACKHOLDER_OPERATION_GET_ID_SUMMARY,
+            description = STACKHOLDER_OPERATION_GET_ID_DESCRIPTION,
+            parameters = @Parameter(name = ID, description = ID_DESCRIPTION, required = true),
+            responses = {
+                    @ApiResponse(
+                            responseCode = STATUS_OK,
+                            description = STATUS_OK_DESCRIPTION,
+                            content = @Content(
+                                    mediaType = MEDIA_TYPE_JSON,
+                                    schema = @Schema(implementation = StackHolderResponse.class)
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = STATUS_NOT_FOUND,
+                            description = STATUS_NOT_FOUND_DESCRIPTION,
+                            content = @Content(
+                                    mediaType = MEDIA_TYPE_JSON,
+                                    schema = @Schema(implementation = ExceptionResponse.class)
+                            )
+                    )
+            }
+    )
     public Mono<StackHolderResponse> getById(@PathVariable String id) {
         return this.service.findById(id)
                 .map(stackHolderMapper::toResponse);
@@ -90,7 +129,7 @@ public class StackHolderController {
     @PostMapping
     @ResponseStatus(CREATED)
     public Mono<StackHolderResponse> insert(@Valid @RequestBody StackHolderInsertRequest request) {
-        if(StringUtils.isBlank(request.getCpf()) && StringUtils.isBlank(request.getCnpj()))
+        if (StringUtils.isBlank(request.getCpf()) && StringUtils.isBlank(request.getCnpj()))
             return Mono.error(new BusinessException(CNPJ_OR_CPF_REQUIRED));
 
         return service.insert(request)
@@ -100,7 +139,7 @@ public class StackHolderController {
     @PutMapping
     @ResponseStatus(ACCEPTED)
     public Mono<StackHolderResponse> update(@Valid @RequestBody StackHolderUpdateRequest request) {
-        if(StringUtils.isBlank(request.getCpf()) && StringUtils.isBlank(request.getCnpj()))
+        if (StringUtils.isBlank(request.getCpf()) && StringUtils.isBlank(request.getCnpj()))
             return Mono.error(new BusinessException(CNPJ_OR_CPF_REQUIRED));
 
         return service.update(request)
