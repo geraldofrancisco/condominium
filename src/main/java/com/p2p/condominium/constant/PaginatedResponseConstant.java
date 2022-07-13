@@ -1,9 +1,10 @@
 package com.p2p.condominium.constant;
 
-import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+import static lombok.AccessLevel.PRIVATE;
+
+@NoArgsConstructor(access = PRIVATE)
 public class PaginatedResponseConstant {
     public static final String LIST = "List with the content returned from the query";
     public static final String PAGE = "Current page";

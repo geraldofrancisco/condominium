@@ -1,9 +1,10 @@
 package com.p2p.condominium.constant;
 
-import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+import static lombok.AccessLevel.PRIVATE;
+
+@NoArgsConstructor(access = PRIVATE)
 public class ExceptionResponseConstant {
     public static final String STATUS = "Http request status";
     public static final String TIMESTAMP = "Error date time";
