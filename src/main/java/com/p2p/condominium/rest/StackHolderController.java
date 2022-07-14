@@ -49,8 +49,16 @@ import static com.p2p.condominium.constant.ControllerConstant.STACKHOLDER_OPERAT
 import static com.p2p.condominium.constant.ControllerConstant.STACKHOLDER_OPERATION_GET_ID_SUMMARY;
 import static com.p2p.condominium.constant.ControllerConstant.STACKHOLDER_OPERATION_LIST_DESCRIPTION;
 import static com.p2p.condominium.constant.ControllerConstant.STACKHOLDER_OPERATION_LIST_SUMMARY;
+import static com.p2p.condominium.constant.ControllerConstant.STACKHOLDER_OPERATION_POST_DESCRIPTION;
+import static com.p2p.condominium.constant.ControllerConstant.STACKHOLDER_OPERATION_POST_SUMMARY;
+import static com.p2p.condominium.constant.ControllerConstant.STACKHOLDER_OPERATION_PUT_DESCRIPTION;
+import static com.p2p.condominium.constant.ControllerConstant.STACKHOLDER_OPERATION_PUT_SUMMARY;
+import static com.p2p.condominium.constant.ControllerConstant.STATUS_ACCEPTED;
+import static com.p2p.condominium.constant.ControllerConstant.STATUS_ACCEPTED_DESCRIPTION;
 import static com.p2p.condominium.constant.ControllerConstant.STATUS_BAD_REQUEST;
 import static com.p2p.condominium.constant.ControllerConstant.STATUS_BAD_REQUEST_DESCRIPTION;
+import static com.p2p.condominium.constant.ControllerConstant.STATUS_CREATED;
+import static com.p2p.condominium.constant.ControllerConstant.STATUS_CREATED_DESCRIPTION;
 import static com.p2p.condominium.constant.ControllerConstant.STATUS_NOT_FOUND;
 import static com.p2p.condominium.constant.ControllerConstant.STATUS_NOT_FOUND_DESCRIPTION;
 import static com.p2p.condominium.constant.ControllerConstant.STATUS_NO_CONTENT;
@@ -134,6 +142,28 @@ public class StackHolderController {
 
     @PostMapping
     @ResponseStatus(CREATED)
+    @Operation(
+            summary = STACKHOLDER_OPERATION_POST_SUMMARY,
+            description = STACKHOLDER_OPERATION_POST_DESCRIPTION,
+            responses = {
+                    @ApiResponse(
+                            responseCode = STATUS_CREATED,
+                            description = STATUS_CREATED_DESCRIPTION,
+                            content = @Content(
+                                    mediaType = MEDIA_TYPE_JSON,
+                                    schema = @Schema(implementation = StackHolderResponse.class)
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = STATUS_BAD_REQUEST,
+                            description = STATUS_BAD_REQUEST_DESCRIPTION,
+                            content = @Content(
+                                    mediaType = MEDIA_TYPE_JSON,
+                                    schema = @Schema(implementation = ExceptionResponse.class)
+                            )
+                    )
+            }
+    )
     public Mono<StackHolderResponse> insert(@Valid @RequestBody StackHolderInsertRequest request) {
         if (StringUtils.isBlank(request.getCpf()) && StringUtils.isBlank(request.getCnpj()))
             return Mono.error(new BusinessException(CNPJ_OR_CPF_REQUIRED));
@@ -144,6 +174,36 @@ public class StackHolderController {
 
     @PutMapping
     @ResponseStatus(ACCEPTED)
+    @Operation(
+            summary = STACKHOLDER_OPERATION_PUT_SUMMARY,
+            description = STACKHOLDER_OPERATION_PUT_DESCRIPTION,
+            responses = {
+                    @ApiResponse(
+                            responseCode = STATUS_ACCEPTED,
+                            description = STATUS_ACCEPTED_DESCRIPTION,
+                            content = @Content(
+                                    mediaType = MEDIA_TYPE_JSON,
+                                    schema = @Schema(implementation = StackHolderResponse.class)
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = STATUS_NOT_FOUND,
+                            description = STATUS_NOT_FOUND_DESCRIPTION,
+                            content = @Content(
+                                    mediaType = MEDIA_TYPE_JSON,
+                                    schema = @Schema(implementation = ExceptionResponse.class)
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = STATUS_BAD_REQUEST,
+                            description = STATUS_BAD_REQUEST_DESCRIPTION,
+                            content = @Content(
+                                    mediaType = MEDIA_TYPE_JSON,
+                                    schema = @Schema(implementation = ExceptionResponse.class)
+                            )
+                    )
+            }
+    )
     public Mono<StackHolderResponse> update(@Valid @RequestBody StackHolderUpdateRequest request) {
         if (StringUtils.isBlank(request.getCpf()) && StringUtils.isBlank(request.getCnpj()))
             return Mono.error(new BusinessException(CNPJ_OR_CPF_REQUIRED));

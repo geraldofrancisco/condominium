@@ -18,6 +18,10 @@ public class ControllerConstant {
     public static final String MEDIA_TYPE_JSON = "application/json";
     public static final String STATUS_OK = "200";
     public static final String STATUS_OK_DESCRIPTION = "Successful operation";
+    public static final String STATUS_CREATED = "201";
+    public static final String STATUS_CREATED_DESCRIPTION = "Entity created";
+    public static final String STATUS_ACCEPTED = "202";
+    public static final String STATUS_ACCEPTED_DESCRIPTION = "Entity accepted";
     public static final String STATUS_NO_CONTENT = "204";
     public static final String STATUS_NO_CONTENT_DESCRIPTION = "No content";
     public static final String STATUS_BAD_REQUEST = "400";
@@ -36,4 +40,8 @@ public class ControllerConstant {
     public static final String STACKHOLDER_OPERATION_GET_ID_DESCRIPTION = "Returns unique stackholder by id";
     public static final String STACKHOLDER_OPERATION_DELETE_SUMMARY = "Delete single stackholder";
     public static final String STACKHOLDER_OPERATION_DELETE_DESCRIPTION = "Exclude unique stackholder by id if it has not been linked to any operation";
+    public static final String STACKHOLDER_OPERATION_POST_SUMMARY = "Create stackholder";
+    public static final String STACKHOLDER_OPERATION_POST_DESCRIPTION = "Create stackholder if it doesn't exist";
+    public static final String STACKHOLDER_OPERATION_PUT_SUMMARY = "Update stackholder";
+    public static final String STACKHOLDER_OPERATION_PUT_DESCRIPTION = "Update stackholder if it exists";
 }
