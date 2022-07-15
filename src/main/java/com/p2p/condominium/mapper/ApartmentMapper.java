@@ -1,7 +1,9 @@
 package com.p2p.condominium.mapper;
 
 import com.p2p.condominium.document.ApartmentDocument;
-import com.p2p.condominium.dto.ApartmentDTO;
+import com.p2p.condominium.dto.ApartmentInsertRequest;
+import com.p2p.condominium.dto.ApartmentResponse;
+import com.p2p.condominium.dto.ApartmentUpdateRequest;
 import org.mapstruct.Mapper;
 
 import java.util.List;
@@ -10,11 +12,11 @@ import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
 
 @Mapper(componentModel = SPRING)
 public interface ApartmentMapper {
-    ApartmentDocument toDocument(ApartmentDTO dto);
+    ApartmentDocument insertToDocument(ApartmentInsertRequest dto);
 
-    List<ApartmentDocument> toDocument(List<ApartmentDTO> list);
+    ApartmentDocument updateToDocument(ApartmentUpdateRequest dto);
 
-    ApartmentDTO toDTO(ApartmentDocument document);
+    ApartmentResponse toResponse(ApartmentDocument document);
 
-    List<ApartmentDTO> toDTO(List<ApartmentDocument> list);
+    List<ApartmentResponse> toResponse(List<ApartmentDocument> list);
 }

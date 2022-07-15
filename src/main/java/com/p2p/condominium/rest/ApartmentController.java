@@ -1,17 +1,13 @@
 package com.p2p.condominium.rest;
 
-import com.p2p.condominium.dto.BuildingDTO;
-import com.p2p.condominium.dto.BuildingInsertRequest;
-import com.p2p.condominium.dto.BuildingResponse;
-import com.p2p.condominium.dto.BuildingUpdateRequest;
-import com.p2p.condominium.dto.CondominiumDTO;
-import com.p2p.condominium.dto.CondominiumUpdateRequest;
+import com.p2p.condominium.dto.ApartmentInsertRequest;
+import com.p2p.condominium.dto.ApartmentResponse;
+import com.p2p.condominium.dto.ApartmentUpdateRequest;
 import com.p2p.condominium.dto.PaginatedResponse;
-import com.p2p.condominium.mapper.BuildingMapper;
-import com.p2p.condominium.service.BuildingService;
+import com.p2p.condominium.mapper.ApartmentMapper;
+import com.p2p.condominium.service.ApartmentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,52 +26,45 @@ import static com.p2p.condominium.constant.ControllerConstant.DEFAULT_SIZE;
 import static org.springframework.data.domain.PageRequest.of;
 import static org.springframework.http.HttpStatus.ACCEPTED;
 import static org.springframework.http.HttpStatus.CREATED;
-import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
 
 @RestController
-@RequestMapping("/v1/building")
+@RequestMapping("/v1/apartment")
 @RequiredArgsConstructor
 @Validated
-public class BuildingController {
-    private final BuildingService service;
+public class ApartmentController {
+    private final ApartmentService service;
 
-    private final BuildingMapper mapper;
+    private final ApartmentMapper mapper;
 
     @GetMapping
     @ResponseStatus(OK)
     public Mono<PaginatedResponse> list(
             @RequestParam(name = "page", defaultValue = DEFAULT_PAGE, required = false) int page,
             @RequestParam(name = "size", defaultValue = DEFAULT_SIZE, required = false) int size,
-            @RequestParam(name = "condominium") String condominium
+            @RequestParam(name = "building") String building
     ) {
-        return this.service.findAll(condominium, of(page, size));
+        return this.service.findAll(building, of(page, size));
     }
 
     @GetMapping("/{id}")
     @ResponseStatus(OK)
-    public Mono<BuildingResponse> getById(@PathVariable String id) {
+    public Mono<ApartmentResponse> getById(@PathVariable String id) {
         return this.service.findById(id)
                 .map(this.mapper::toResponse);
     }
 
     @PostMapping
     @ResponseStatus(CREATED)
-    public Mono<BuildingResponse> insert(@Valid @RequestBody BuildingInsertRequest request) {
-        return this.service.insert(this.mapper.toDTO(request))
+    public Mono<ApartmentResponse> insert(@Valid @RequestBody ApartmentInsertRequest request) {
+        return this.service.insert(request)
                 .map(this.mapper::toResponse);
     }
 
     @PutMapping
     @ResponseStatus(ACCEPTED)
-    public Mono<BuildingResponse> update(@Valid @RequestBody BuildingUpdateRequest request) {
-        return this.service.update(this.mapper.toDTO(request))
+    public Mono<ApartmentResponse> update(@Valid @RequestBody ApartmentUpdateRequest request) {
+        return this.service.update(request)
                 .map(this.mapper::toResponse);
-    }
-
-    @DeleteMapping("/{id}")
-    @ResponseStatus(NO_CONTENT)
-    public Mono<Void> delete(@PathVariable String id) {
-        return this.service.delete(id);
     }
 }

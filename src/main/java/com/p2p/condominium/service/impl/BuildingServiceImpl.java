@@ -58,7 +58,7 @@ public class BuildingServiceImpl implements BuildingService {
     }
 
     @Override
-    public Mono<PaginatedResponse> findAll(Pageable pageable, String condominium) {
+    public Mono<PaginatedResponse> findAll(String condominium, Pageable pageable) {
         return this.repository.countByCondominium(condominium)
                 .flatMap(total ->
                         this.repository.findByCondominiumOrderByName(condominium, pageable)

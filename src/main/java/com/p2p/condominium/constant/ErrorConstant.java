@@ -30,12 +30,16 @@ public class ErrorConstant {
     public static final String BUILDING_CONDOMINIUM_REQUIRED = "O condomínio no qual o prédio pertence é obrigatório";
     public static final String BUILDING_NAME_CONDOMINIUM_REQUIRED = "O nome do prédio é obrigatório";
     public static final String BUILDING_NUMBER_OF_FLOORS_REQUIRED = "A quantidade de andares é obrigatória";
+    public static final String BUILDING_NUMBER_OF_FLOORS_SIZE = "A quantidade de andares deve estar entre 1 e 100";
     public static final String BUILDING_NUMBER_OF_APARTAMENTS_PER_FLOOR_REQUIRED = "A quantidade de apartamentos é obrigatória";
+    public static final String BUILDING_NUMBER_OF_APARTAMENTS_PER_FLOOR_SIZE = "A quantidade de apartamentos deve estar entre 1 e 10";
     public static final String BUILDING_NUMBER_OF_PARKING_APARTMENT_REQUIRED = "A quantidade de vagas é obrigatória";
     public static final String BUILDING_ID_NOT_EXIST = "O prédio informado não existe";
 
     public static final String BUILDING_EXISTS_APARTMENTS_NOT_DELETE = "O prédio informado contém apartamentos, por isso não pode ser excluído";
 
     public static final String CONDOMINIUM_EXISTS_BUILDING_NOT_DELETE = "O condomínio informado contém prédios, por isso não pode ser excluído";
+
+    public static final String APARTMENT_ID_NOT_EXIST = "O apartamento informado não existe";
 
 }

@@ -13,7 +13,7 @@ public interface BuildingService {
 
     Mono<BuildingDocument> findById(String id);
 
-    Mono<PaginatedResponse> findAll(Pageable pageable, String condominium);
+    Mono<PaginatedResponse> findAll(String condominium, Pageable pageable);
 
     Mono<Void> delete(String id);
 }

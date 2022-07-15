@@ -3,25 +3,24 @@ package com.p2p.condominium.dto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+import static com.p2p.condominium.constant.ErrorConstant.REQUEST_ID_REQUIRED;
+
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode
-public class ApartmentDTO {
-    private String id;
+public class ApartmentInsertRequest {
     @NotBlank
     private String building;
-    @NotBlank
-    private String owner;
+
     @NotNull
     private Integer floor;
+
     @NotNull
     private Integer number;
 }
