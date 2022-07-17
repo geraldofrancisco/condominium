@@ -27,7 +27,7 @@ public class ErrorConstant {
     public static final String STACKHOLDER_PHYSICAL_PERSON_ID_NOT_EXIST = "A pessoa informada não existe";
     public static final String STACKHOLDER_LEGAL_PERSON_ID_NOT_EXIST = "A empresa informada não existe";
     public static final String STACKHOLDER_IN_USE_CONDOMINIUM = "Não é possivel excluir o stackholder pois ele está em uso em condomínio";
-    public static final String STACKHOLDER_IN_USE_APARTMENT = "Não é possivel excluir o stackholder pois ele está em uso em apartamento";
+    public static final String STACKHOLDER_IN_USE_APARTMENT = "Não é possivel excluir o stackholder pois ele tem um apartamento vinculado a ele";
 
     /**
      * BUILDING

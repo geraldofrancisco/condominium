@@ -14,8 +14,10 @@ import com.p2p.condominium.service.StackHolderService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Mono;
 
+import static com.p2p.condominium.constant.ErrorConstant.APARTMENT_DONT_INSERT;
 import static com.p2p.condominium.constant.ErrorConstant.STACKHOLDER_ID_NOT_EXIST;
 import static com.p2p.condominium.constant.ErrorConstant.STACKHOLDER_IN_USE_APARTMENT;
 import static com.p2p.condominium.constant.ErrorConstant.STACKHOLDER_IN_USE_CONDOMINIUM;
@@ -57,10 +59,12 @@ public class StackHolderServiceImpl implements StackHolderService {
                 .flatMap(sh -> this.repository.save(document));
     }
 
+    @Transactional
     @Override
     public Mono<Void> delete(String id) {
         return findById(id)
-                .flatMap(this::validatesIfYouCanDelete)
+                .flatMap(this::validateDeleteCondominium)
+                .flatMap(this::validateDeleteApartment)
                 .flatMap(sh -> this.repository.delete(sh));
     }
 
@@ -88,22 +92,27 @@ public class StackHolderServiceImpl implements StackHolderService {
                 this.repository.findByIdNotNullOrderByNameAsc(pageable)
                         .collectList()
                         .flatMap(list -> Mono.just(paginatedResponseMapper
-                                .toPaginator(stackHolderMapper.toResponse(list), pageable.getPageNumber(), pageable.getPageSize(), total))                        )
+                                .toPaginator(stackHolderMapper.toResponse(list), pageable.getPageNumber(), pageable.getPageSize(), total)))
         );
 
     }
 
-    private Mono<StackHolderDocument> validatesIfYouCanDelete(StackHolderDocument document) {
+
+    private Mono<StackHolderDocument> validateDeleteCondominium(StackHolderDocument document) {
         return condominiumRepository.existsByConstructionCompanyOrCondominiumManagerManagerId(document.getId(), document.getId())
-                .flatMap(exist -> this.validateDelete(exist, STACKHOLDER_IN_USE_CONDOMINIUM))
-                .flatMap(x -> this.apartmentRepository.existsByOwner(document.getId()))
-                .flatMap(exist -> this.validateDelete(exist, STACKHOLDER_IN_USE_APARTMENT))
-                .thenReturn(document);
+                .flatMap(exists -> {
+                    if (!exists)
+                        return Mono.empty();
+                    return Mono.error(new BusinessException(STACKHOLDER_IN_USE_CONDOMINIUM));
+                }).thenReturn(document);
     }
 
-    private Mono<Void> validateDelete(final Boolean exist, final String message) {
-        if(exist)
-            return Mono.error(new BusinessException(message));
-        return Mono.empty();
+    private Mono<StackHolderDocument> validateDeleteApartment(StackHolderDocument document) {
+        return this.apartmentRepository.existsByOwner(document.getId())
+                .flatMap(exists -> {
+                    if (!exists)
+                        return Mono.empty();
+                    return Mono.error(new BusinessException(STACKHOLDER_IN_USE_APARTMENT));
+                }).thenReturn(document);
     }
 }
