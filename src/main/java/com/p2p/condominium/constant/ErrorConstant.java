@@ -50,6 +50,7 @@ public class ErrorConstant {
     /**
      * APARTMENT
      * */
+    public static final String APARTMENT_ID_REQUIRED = "O apartamento deve ser informado";
     public static final String APARTMENT_ID_NOT_EXIST = "O apartamento informado não existe";
     public static final String APARTMENT_BUILDING_REQUIRED = "O prédio deve ser informado";
     public static final String APARTMENT_FLOOR_REQUIRED = "O andar deve ser informado";
@@ -60,4 +61,5 @@ public class ErrorConstant {
     public static final String APARTMENT_NUMBER_MIN = "O numero do apartamento deve superior a 1";
     public static final String APARTMENT_DONT_INSERT = "Não é possível inserir o apartamento pois ele já está cadastrado";
     public static final String APARTMENT_BUILDING_NOT_EXISTS = "Não existe o prédio informado";
+    public static final String APARTMENT_OWNER_REQUIRED = "O proprietário é obrigatório";
 }

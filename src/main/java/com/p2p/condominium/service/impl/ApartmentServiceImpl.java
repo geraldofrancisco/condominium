@@ -3,13 +3,14 @@ package com.p2p.condominium.service.impl;
 import com.p2p.condominium.document.ApartmentDocument;
 import com.p2p.condominium.document.BuildingDocument;
 import com.p2p.condominium.dto.ApartmentInsertRequest;
-import com.p2p.condominium.dto.ApartmentUpdateRequest;
+import com.p2p.condominium.dto.ApartmentOwnerRequest;
 import com.p2p.condominium.dto.PaginatedResponse;
 import com.p2p.condominium.exception.BusinessException;
 import com.p2p.condominium.mapper.ApartmentMapper;
 import com.p2p.condominium.mapper.PaginatedResponseMapper;
 import com.p2p.condominium.repository.ApartmentRepository;
 import com.p2p.condominium.repository.BuildingRepository;
+import com.p2p.condominium.repository.StackHolderRepository;
 import com.p2p.condominium.service.ApartmentService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +24,7 @@ import static com.p2p.condominium.constant.ErrorConstant.APARTMENT_DONT_INSERT;
 import static com.p2p.condominium.constant.ErrorConstant.APARTMENT_FLOOR_CROWDED;
 import static com.p2p.condominium.constant.ErrorConstant.APARTMENT_FLOOR_MAX;
 import static com.p2p.condominium.constant.ErrorConstant.APARTMENT_ID_NOT_EXIST;
+import static com.p2p.condominium.constant.ErrorConstant.STACKHOLDER_ID_NOT_EXIST;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Slf4j
@@ -35,6 +37,8 @@ public class ApartmentServiceImpl implements ApartmentService {
     private ApartmentMapper mapper;
 
     private BuildingRepository buildingRepository;
+
+    private StackHolderRepository stackHolderRepository;
 
     private PaginatedResponseMapper paginatedResponseMapper;
 
@@ -64,6 +68,13 @@ public class ApartmentServiceImpl implements ApartmentService {
                 .flatMap(this::validatesTheNumberOfApartmentsOnTheFloor)
                 .flatMap(this::validatesTheNumberOfFloorsInTheBuilding)
                 .flatMap(this.repository::save);
+    }
+
+    @Override
+    public Mono<Void> delete(String id) {
+        return this.findById(id)
+                //TODO: verificar se não há vinculo do apartamento com outro objeto para deletar
+                .flatMap(this.repository::delete);
     }
 
     private Mono<ApartmentDocument> validateExistsApartment(ApartmentDocument document) {
@@ -101,13 +112,15 @@ public class ApartmentServiceImpl implements ApartmentService {
     }
 
     @Override
-    public Mono<ApartmentDocument> update(ApartmentUpdateRequest request) {
-        return null;
-    }
-
-    @Override
-    public Mono<ApartmentDocument> assignApartmentOwner(String apartment, String owner) {
-        return null;
+    public Mono<ApartmentDocument> assignApartmentOwner(ApartmentOwnerRequest request) {
+        return this.stackHolderRepository.findById(request.getOwner())
+                .switchIfEmpty(Mono.error(new BusinessException(STACKHOLDER_ID_NOT_EXIST, NOT_FOUND)))
+                .flatMap(sh -> this.findById(request.getId()))
+                .flatMap(document -> {
+                    document.setOwner(request.getOwner());
+                    return Mono.just(document);
+                })
+                .flatMap(this.repository::save);
     }
 
 }

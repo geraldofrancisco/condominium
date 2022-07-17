@@ -1,8 +1,8 @@
 package com.p2p.condominium.rest;
 
 import com.p2p.condominium.dto.ApartmentInsertRequest;
+import com.p2p.condominium.dto.ApartmentOwnerRequest;
 import com.p2p.condominium.dto.ApartmentResponse;
-import com.p2p.condominium.dto.ApartmentUpdateRequest;
 import com.p2p.condominium.dto.PaginatedResponse;
 import com.p2p.condominium.mapper.ApartmentMapper;
 import com.p2p.condominium.service.ApartmentService;
@@ -61,10 +61,10 @@ public class ApartmentController {
                 .map(this.mapper::toResponse);
     }
 
-    @PutMapping
+    @PutMapping("/assign-owner")
     @ResponseStatus(ACCEPTED)
-    public Mono<ApartmentResponse> update(@Valid @RequestBody ApartmentUpdateRequest request) {
-        return this.service.update(request)
+    public Mono<ApartmentResponse> assignOwner(@Valid @RequestBody ApartmentOwnerRequest request) {
+        return this.service.assignApartmentOwner(request)
                 .map(this.mapper::toResponse);
     }
 }
