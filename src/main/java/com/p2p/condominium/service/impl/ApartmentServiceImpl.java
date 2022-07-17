@@ -20,8 +20,8 @@ import reactor.core.publisher.Mono;
 import static com.p2p.condominium.constant.ErrorConstant.APARTMENT_BUILDING_NOT_EXISTS;
 import static com.p2p.condominium.constant.ErrorConstant.APARTMENT_DONT_INSERT;
 import static com.p2p.condominium.constant.ErrorConstant.APARTMENT_FLOOR_CROWDED;
+import static com.p2p.condominium.constant.ErrorConstant.APARTMENT_FLOOR_MAX;
 import static com.p2p.condominium.constant.ErrorConstant.APARTMENT_ID_NOT_EXIST;
-import static org.apache.commons.lang3.tuple.Pair.of;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Slf4j
@@ -54,6 +54,7 @@ public class ApartmentServiceImpl implements ApartmentService {
                 .flatMap(this::validateExistsApartment)
                 .flatMap(this::validateExistsBuilder)
                 .flatMap(this::validatesTheNumberOfApartmentsOnTheFloor)
+                .flatMap(this::validatesTheNumberOfFloorsInTheBuilding)
                 .flatMap(this.repository::save);
     }
 
@@ -72,15 +73,23 @@ public class ApartmentServiceImpl implements ApartmentService {
                 .flatMap(building -> Mono.just(Pair.of(document, building)));
     }
 
-    private Mono<ApartmentDocument> validatesTheNumberOfApartmentsOnTheFloor(Pair<ApartmentDocument, BuildingDocument> pair) {
+    private Mono<Pair<ApartmentDocument, BuildingDocument>> validatesTheNumberOfApartmentsOnTheFloor(Pair<ApartmentDocument, BuildingDocument> pair) {
         var apartment = pair.getFirst();
         var building = pair.getSecond();
         return this.repository.countByBuildingAndFloor(apartment.getBuilding(), apartment.getFloor())
                 .flatMap(count -> {
-                    if(building.getNumberOfApartmentsPerFloor() <= count)
+                    if (building.getNumberOfApartmentsPerFloor() <= count)
                         return Mono.error(new BusinessException(APARTMENT_FLOOR_CROWDED));
                     return Mono.empty();
-                }).thenReturn(apartment);
+                }).thenReturn(pair);
+    }
+
+    private Mono<ApartmentDocument> validatesTheNumberOfFloorsInTheBuilding(Pair<ApartmentDocument, BuildingDocument> pair) {
+        var apartment = pair.getFirst();
+        var building = pair.getSecond();
+        if (building.getNumberOfFloors() < apartment.getFloor())
+            return Mono.error(new BusinessException(APARTMENT_FLOOR_MAX));
+        return Mono.just(apartment);
     }
 
     @Override

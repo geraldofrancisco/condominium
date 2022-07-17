@@ -55,6 +55,7 @@ public class ErrorConstant {
     public static final String APARTMENT_FLOOR_REQUIRED = "O andar deve ser informado";
     public static final String APARTMENT_FLOOR_MIN = "O numero do andar deve superior a 1";
     public static final String APARTMENT_FLOOR_CROWDED = "Não é possível salvar outro apartamento nesse prédio e andar";
+    public static final String APARTMENT_FLOOR_MAX = "Não é possível salvar nesse andar, limite de andares já alcançado";
     public static final String APARTMENT_NUMBER_REQUIRED = "O numero do apartamento deve ser informado";
     public static final String APARTMENT_NUMBER_MIN = "O numero do apartamento deve superior a 1";
     public static final String APARTMENT_DONT_INSERT = "Não é possível inserir o apartamento pois ele já está cadastrado";
