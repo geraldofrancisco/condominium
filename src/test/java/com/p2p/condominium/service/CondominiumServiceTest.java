@@ -56,7 +56,7 @@ public class CondominiumServiceTest {
         var condominiumManagerMapper = Mappers.getMapper(CondominiumManagerMapper.class);
         ReflectionTestUtils.setField(condominiumMapper, "addressMapper", addressMapper);
         ReflectionTestUtils.setField(condominiumMapper, "condominiumManagerMapper", condominiumManagerMapper);
-        ReflectionTestUtils.setField(service, "condominiumMapper", condominiumMapper);
+        ReflectionTestUtils.setField(service, "mapper", condominiumMapper);
     }
 
     @Test

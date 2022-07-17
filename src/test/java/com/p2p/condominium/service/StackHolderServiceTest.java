@@ -52,7 +52,7 @@ public class StackHolderServiceTest {
         var addressMapper = Mappers.getMapper(AddressMapper.class);
         ReflectionTestUtils.setField(stackHolderMapper, "addressMapper", addressMapper);
         ReflectionTestUtils.setField(stackHolderMapper, "phoneMapper", phoneMapper);
-        ReflectionTestUtils.setField(service, "stackHolderMapper", stackHolderMapper);
+        ReflectionTestUtils.setField(service, "mapper", stackHolderMapper);
     }
 
     @Test
