@@ -1,8 +1,9 @@
 package com.p2p.condominium.rest;
 
-import com.p2p.condominium.dto.PaginatedResponse;
 import org.junit.Before;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
 import javax.validation.ConstraintViolation;
@@ -29,11 +30,7 @@ public abstract class ControllerTest {
         return validator.validate(request);
     }
 
-    protected PaginatedResponse.PaginatedResponseBuilder getReturnSuccessList() {
-        return PaginatedResponse.builder()
-                .content(new ArrayList())
-                .page(0)
-                .size(1)
-                .totalRecords(1L);
+    protected Page getReturnSuccessList() {
+        return new PageImpl(new ArrayList());
     }
 }

@@ -6,7 +6,6 @@ import com.p2p.condominium.dto.StackHolderInsertRequest;
 import com.p2p.condominium.dto.StackHolderUpdateRequest;
 import com.p2p.condominium.exception.CondominiumExceptionHandler;
 import com.p2p.condominium.mapper.AddressMapper;
-import com.p2p.condominium.mapper.PaginatedResponseMapper;
 import com.p2p.condominium.mapper.PhoneMapper;
 import com.p2p.condominium.mapper.StackHolderMapper;
 import com.p2p.condominium.service.StackHolderService;
@@ -15,7 +14,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mapstruct.factory.Mappers;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
@@ -71,7 +69,7 @@ public class StackHolderControllerTest extends ControllerTest {
 
     @Test
     public void testListSuccess() {
-        when(service.findAll(any())).thenReturn(Mono.just(getReturnSuccessList().build()));
+        when(service.findAll(any())).thenReturn(Mono.just(getReturnSuccessList()));
         this.client.get()
                 .uri(STACKHOLDER_URL)
                 .exchange()

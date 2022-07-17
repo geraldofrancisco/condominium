@@ -9,7 +9,6 @@ import com.p2p.condominium.exception.BusinessException;
 import com.p2p.condominium.mapper.AddressMapper;
 import com.p2p.condominium.mapper.CondominiumManagerMapper;
 import com.p2p.condominium.mapper.CondominiumMapper;
-import com.p2p.condominium.mapper.PaginatedResponseMapper;
 import com.p2p.condominium.repository.CondominiumRepository;
 import com.p2p.condominium.service.impl.CondominiumServiceImpl;
 import org.junit.Before;
@@ -52,13 +51,11 @@ public class CondominiumServiceTest {
 
     @Before
     public void setup() {
-        var paginatedResponseMapper = Mappers.getMapper(PaginatedResponseMapper.class);
         var condominiumMapper = Mappers.getMapper(CondominiumMapper.class);
         var addressMapper = Mappers.getMapper(AddressMapper.class);
         var condominiumManagerMapper = Mappers.getMapper(CondominiumManagerMapper.class);
         ReflectionTestUtils.setField(condominiumMapper, "addressMapper", addressMapper);
         ReflectionTestUtils.setField(condominiumMapper, "condominiumManagerMapper", condominiumManagerMapper);
-        ReflectionTestUtils.setField(service, "paginatedResponseMapper", paginatedResponseMapper);
         ReflectionTestUtils.setField(service, "condominiumMapper", condominiumMapper);
     }
 

@@ -5,10 +5,8 @@ import com.p2p.condominium.document.BuildingDocument;
 import com.p2p.condominium.dto.ApartmentInsertRequest;
 import com.p2p.condominium.dto.ApartmentOwnerRequest;
 import com.p2p.condominium.dto.ApartmentResponse;
-import com.p2p.condominium.dto.PaginatedResponse;
 import com.p2p.condominium.exception.BusinessException;
 import com.p2p.condominium.mapper.ApartmentMapper;
-import com.p2p.condominium.mapper.PaginatedResponseMapper;
 import com.p2p.condominium.repository.ApartmentRepository;
 import com.p2p.condominium.repository.BuildingRepository;
 import com.p2p.condominium.repository.StackHolderRepository;
@@ -43,7 +41,6 @@ public class ApartmentServiceImpl implements ApartmentService {
 
     private StackHolderRepository stackHolderRepository;
 
-    private PaginatedResponseMapper paginatedResponseMapper;
 
 
     @Override
@@ -51,7 +48,7 @@ public class ApartmentServiceImpl implements ApartmentService {
         return this.repository.countByBuilding(building)
                 .flatMap(total -> this.repository.findByBuildingOrderByFloorAscNumberAsc(building, pageable)
                         .collectList()
-                        .flatMap(list -> Mono.just( new PageImpl<>(this.mapper.toResponse(list), pageable, total)))
+                        .map(list -> new PageImpl<>(this.mapper.toResponse(list), pageable, total))
                 );
     }
 

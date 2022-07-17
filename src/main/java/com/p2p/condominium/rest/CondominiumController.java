@@ -3,10 +3,10 @@ package com.p2p.condominium.rest;
 import com.p2p.condominium.dto.CondominiumDTO;
 import com.p2p.condominium.dto.CondominiumResponse;
 import com.p2p.condominium.dto.CondominiumUpdateRequest;
-import com.p2p.condominium.dto.PaginatedResponse;
 import com.p2p.condominium.mapper.CondominiumMapper;
 import com.p2p.condominium.service.CondominiumService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,7 +41,7 @@ public class CondominiumController {
 
     @GetMapping
     @ResponseStatus(OK)
-    public Mono<PaginatedResponse> list(
+    public Mono<Page<CondominiumResponse>> list(
             @RequestParam(name = "page", defaultValue = DEFAULT_PAGE, required = false) int page,
             @RequestParam(name = "size", defaultValue = DEFAULT_SIZE, required = false) int size
     ) {

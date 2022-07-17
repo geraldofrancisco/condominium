@@ -1,15 +1,12 @@
 package com.p2p.condominium.rest;
 
-import com.p2p.condominium.dto.BuildingDTO;
 import com.p2p.condominium.dto.BuildingInsertRequest;
 import com.p2p.condominium.dto.BuildingResponse;
 import com.p2p.condominium.dto.BuildingUpdateRequest;
-import com.p2p.condominium.dto.CondominiumDTO;
-import com.p2p.condominium.dto.CondominiumUpdateRequest;
-import com.p2p.condominium.dto.PaginatedResponse;
 import com.p2p.condominium.mapper.BuildingMapper;
 import com.p2p.condominium.service.BuildingService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -44,7 +41,7 @@ public class BuildingController {
 
     @GetMapping
     @ResponseStatus(OK)
-    public Mono<PaginatedResponse> list(
+    public Mono<Page<BuildingResponse>> list(
             @RequestParam(name = "page", defaultValue = DEFAULT_PAGE, required = false) int page,
             @RequestParam(name = "size", defaultValue = DEFAULT_SIZE, required = false) int size,
             @RequestParam(name = "condominium") String condominium

@@ -1,9 +1,10 @@
 package com.p2p.condominium.service;
 
 import com.p2p.condominium.document.StackHolderDocument;
-import com.p2p.condominium.dto.PaginatedResponse;
 import com.p2p.condominium.dto.StackHolderInsertRequest;
+import com.p2p.condominium.dto.StackHolderResponse;
 import com.p2p.condominium.dto.StackHolderUpdateRequest;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import reactor.core.publisher.Mono;
 
@@ -19,5 +20,5 @@ public interface StackHolderService {
     Mono<StackHolderDocument> findByPhysicalPersonAndId(String id);
     Mono<StackHolderDocument> findByLegalPersonAndId(String id);
 
-    Mono<PaginatedResponse> findAll(Pageable pageable);
+    Mono<Page<StackHolderResponse>> findAll(Pageable pageable);
 }

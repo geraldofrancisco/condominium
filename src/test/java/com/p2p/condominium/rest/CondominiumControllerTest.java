@@ -67,7 +67,7 @@ public class CondominiumControllerTest extends ControllerTest {
 
     @Test
     public void testListSuccess() {
-        when(service.findAll(any())).thenReturn(Mono.just(getReturnSuccessList().build()));
+        when(service.findAll(any())).thenReturn(Mono.just(getReturnSuccessList()));
         this.client.get()
                 .uri(CONDOMINIUM_URL)
                 .exchange()

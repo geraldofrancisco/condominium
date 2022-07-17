@@ -16,7 +16,7 @@ public interface CondominiumMapper {
 
     CondominiumDocument toDocument(CondominiumDTO dto);
 
-    List<CondominiumResponse> toDTO(List<CondominiumDocument> list);
+    List<CondominiumResponse> toResponse(List<CondominiumDocument> list);
 
     @Mapping(source = "document.constructionCompany", target = "constructionCompanyId")
     CondominiumResponse toResponse(CondominiumDocument document);

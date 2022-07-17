@@ -7,7 +7,6 @@ import com.p2p.condominium.dto.StackHolderInsertRequest;
 import com.p2p.condominium.dto.StackHolderUpdateRequest;
 import com.p2p.condominium.exception.BusinessException;
 import com.p2p.condominium.mapper.AddressMapper;
-import com.p2p.condominium.mapper.PaginatedResponseMapper;
 import com.p2p.condominium.mapper.PhoneMapper;
 import com.p2p.condominium.mapper.StackHolderMapper;
 import com.p2p.condominium.repository.StackHolderRepository;
@@ -49,13 +48,11 @@ public class StackHolderServiceTest {
     @Before
     public void before() {
         var stackHolderMapper = Mappers.getMapper(StackHolderMapper.class);
-        var paginatedResponseMapper = Mappers.getMapper(PaginatedResponseMapper.class);
         var phoneMapper = Mappers.getMapper(PhoneMapper.class);
         var addressMapper = Mappers.getMapper(AddressMapper.class);
         ReflectionTestUtils.setField(stackHolderMapper, "addressMapper", addressMapper);
         ReflectionTestUtils.setField(stackHolderMapper, "phoneMapper", phoneMapper);
         ReflectionTestUtils.setField(service, "stackHolderMapper", stackHolderMapper);
-        ReflectionTestUtils.setField(service, "paginatedResponseMapper", paginatedResponseMapper);
     }
 
     @Test

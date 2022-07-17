@@ -3,7 +3,6 @@ package com.p2p.condominium.rest;
 import com.p2p.condominium.dto.ApartmentInsertRequest;
 import com.p2p.condominium.dto.ApartmentOwnerRequest;
 import com.p2p.condominium.dto.ApartmentResponse;
-import com.p2p.condominium.dto.PaginatedResponse;
 import com.p2p.condominium.mapper.ApartmentMapper;
 import com.p2p.condominium.service.ApartmentService;
 import lombok.RequiredArgsConstructor;

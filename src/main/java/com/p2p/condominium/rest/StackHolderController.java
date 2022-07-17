@@ -1,7 +1,6 @@
 package com.p2p.condominium.rest;
 
 import com.p2p.condominium.dto.ExceptionResponse;
-import com.p2p.condominium.dto.PaginatedResponse;
 import com.p2p.condominium.dto.StackHolderInsertRequest;
 import com.p2p.condominium.dto.StackHolderResponse;
 import com.p2p.condominium.dto.StackHolderUpdateRequest;
@@ -16,7 +15,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -98,12 +97,12 @@ public class StackHolderController {
                             description = STATUS_OK_DESCRIPTION,
                             content = @Content(
                                     mediaType = MEDIA_TYPE_JSON,
-                                    schema = @Schema(implementation = PaginatedResponse.class)
+                                    schema = @Schema(implementation = Page.class)
                             )
                     )
             }
     )
-    public Mono<PaginatedResponse> list(
+    public Mono<Page<StackHolderResponse>> list(
             @RequestParam(name = PAGE, defaultValue = DEFAULT_PAGE, required = false) int page,
             @RequestParam(name = SIZE, defaultValue = DEFAULT_SIZE, required = false) int size
     ) {

@@ -2,17 +2,17 @@ package com.p2p.condominium.service.impl;
 
 import com.p2p.condominium.document.BuildingDocument;
 import com.p2p.condominium.dto.BuildingDTO;
-import com.p2p.condominium.dto.PaginatedResponse;
+import com.p2p.condominium.dto.BuildingResponse;
 import com.p2p.condominium.exception.BusinessException;
 import com.p2p.condominium.mapper.BuildingMapper;
-import com.p2p.condominium.mapper.PaginatedResponseMapper;
 import com.p2p.condominium.repository.ApartmentRepository;
 import com.p2p.condominium.repository.BuildingRepository;
-import com.p2p.condominium.service.ApartmentService;
 import com.p2p.condominium.service.BuildingService;
 import com.p2p.condominium.service.CondominiumService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
@@ -31,7 +31,6 @@ public class BuildingServiceImpl implements BuildingService {
 
     private BuildingMapper mapper;
 
-    private PaginatedResponseMapper paginatedResponseMapper;
 
     private CondominiumService condominiumService;
 
@@ -58,13 +57,12 @@ public class BuildingServiceImpl implements BuildingService {
     }
 
     @Override
-    public Mono<PaginatedResponse> findAll(String condominium, Pageable pageable) {
+    public Mono<Page<BuildingResponse>> findAll(String condominium, Pageable pageable) {
         return this.repository.countByCondominium(condominium)
                 .flatMap(total ->
                         this.repository.findByCondominiumOrderByName(condominium, pageable)
                                 .collectList()
-                                .flatMap(list -> Mono.just(this.paginatedResponseMapper
-                                        .toPaginator(this.mapper.toResponse(list), pageable.getPageNumber(), pageable.getPageSize(), total)))
+                                .map(list -> new PageImpl<>(this.mapper.toResponse(list), pageable, total))
                 );
     }
 

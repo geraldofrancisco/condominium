@@ -2,16 +2,16 @@ package com.p2p.condominium.service.impl;
 
 import com.p2p.condominium.document.CondominiumDocument;
 import com.p2p.condominium.dto.CondominiumDTO;
-import com.p2p.condominium.dto.PaginatedResponse;
+import com.p2p.condominium.dto.CondominiumResponse;
 import com.p2p.condominium.exception.BusinessException;
 import com.p2p.condominium.mapper.CondominiumMapper;
-import com.p2p.condominium.mapper.PaginatedResponseMapper;
 import com.p2p.condominium.repository.BuildingRepository;
 import com.p2p.condominium.repository.CondominiumRepository;
-import com.p2p.condominium.service.BuildingService;
 import com.p2p.condominium.service.CondominiumService;
 import com.p2p.condominium.service.StackHolderService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
@@ -30,15 +30,13 @@ public class CondominiumServiceImpl implements CondominiumService {
 
     private StackHolderService stackHolderService;
 
-    private PaginatedResponseMapper paginatedResponseMapper;
-
-    private CondominiumMapper condominiumMapper;
+    private CondominiumMapper mapper;
 
     private BuildingRepository buildingRepository;
 
     @Override
     public Mono<CondominiumDocument> insert(CondominiumDTO dto) {
-        var document = condominiumMapper.toDocument(dto);
+        var document = mapper.toDocument(dto);
         insertInformation(document);
         return this.repository.findByIdentification(dto.getIdentification())
                 .switchIfEmpty(saveDocument(document, dto.getConstructionCompanyId()));
@@ -56,7 +54,7 @@ public class CondominiumServiceImpl implements CondominiumService {
 
     @Override
     public Mono<CondominiumDocument> update(CondominiumDTO dto) {
-        var document = condominiumMapper.toDocument(dto);
+        var document = mapper.toDocument(dto);
         updateInformation(document);
         return this.findById(dto.getId())
                 .flatMap(c -> saveDocument(document, dto.getConstructionCompanyId()));
@@ -76,12 +74,12 @@ public class CondominiumServiceImpl implements CondominiumService {
     }
 
     @Override
-    public Mono<PaginatedResponse> findAll(Pageable pageable) {
+    public Mono<Page<CondominiumResponse>> findAll(Pageable pageable) {
         return this.repository.count().flatMap(total ->
                 this.repository.findByIdNotNullOrderByNameAsc(pageable)
                         .collectList()
-                        .flatMap(list -> Mono.just(paginatedResponseMapper
-                                .toPaginator(condominiumMapper.toDTO(list), pageable.getPageNumber(), pageable.getPageSize(), total)))
+                        .map(list -> new PageImpl<>(this.mapper.toResponse(list), pageable, total))
+
         );
     }
 
