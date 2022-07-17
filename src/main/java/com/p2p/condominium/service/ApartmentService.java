@@ -12,4 +12,6 @@ public interface ApartmentService {
     Mono<ApartmentDocument> findById(String id);
     Mono<ApartmentDocument> insert(ApartmentInsertRequest request);
     Mono<ApartmentDocument> update(ApartmentUpdateRequest request);
+
+    Mono<ApartmentDocument> assignApartmentOwner(String apartment, String owner);
 }

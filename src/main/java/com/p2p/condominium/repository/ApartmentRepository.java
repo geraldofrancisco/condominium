@@ -9,4 +9,8 @@ import reactor.core.publisher.Mono;
 public interface ApartmentRepository extends ReactiveMongoRepository<ApartmentDocument, String> {
     Mono<Boolean> existsByBuilding(String building);
     Mono<Boolean> existsByOwner(String owner);
+
+    Mono<Boolean> existsByBuildingAndFloorAndNumber(String building, Integer floor, Integer number);
+
+    Mono<Long> countByBuildingAndFloor(String building, Integer floor);
 }
