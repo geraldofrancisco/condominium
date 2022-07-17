@@ -8,6 +8,7 @@ import com.p2p.condominium.mapper.ApartmentMapper;
 import com.p2p.condominium.service.ApartmentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,6 +27,7 @@ import static com.p2p.condominium.constant.ControllerConstant.DEFAULT_SIZE;
 import static org.springframework.data.domain.PageRequest.of;
 import static org.springframework.http.HttpStatus.ACCEPTED;
 import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
 
 @RestController
@@ -66,5 +68,11 @@ public class ApartmentController {
     public Mono<ApartmentResponse> assignOwner(@Valid @RequestBody ApartmentOwnerRequest request) {
         return this.service.assignApartmentOwner(request)
                 .map(this.mapper::toResponse);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(NO_CONTENT)
+    public Mono<Void> delete(@PathVariable String id) {
+        return this.service.delete(id);
     }
 }

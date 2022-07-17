@@ -14,10 +14,8 @@ import com.p2p.condominium.service.StackHolderService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Mono;
 
-import static com.p2p.condominium.constant.ErrorConstant.APARTMENT_DONT_INSERT;
 import static com.p2p.condominium.constant.ErrorConstant.STACKHOLDER_ID_NOT_EXIST;
 import static com.p2p.condominium.constant.ErrorConstant.STACKHOLDER_IN_USE_APARTMENT;
 import static com.p2p.condominium.constant.ErrorConstant.STACKHOLDER_IN_USE_CONDOMINIUM;
@@ -59,7 +57,6 @@ public class StackHolderServiceImpl implements StackHolderService {
                 .flatMap(sh -> this.repository.save(document));
     }
 
-    @Transactional
     @Override
     public Mono<Void> delete(String id) {
         return findById(id)
