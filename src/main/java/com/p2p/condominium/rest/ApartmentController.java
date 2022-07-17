@@ -7,6 +7,7 @@ import com.p2p.condominium.dto.PaginatedResponse;
 import com.p2p.condominium.mapper.ApartmentMapper;
 import com.p2p.condominium.service.ApartmentService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,7 +42,7 @@ public class ApartmentController {
 
     @GetMapping
     @ResponseStatus(OK)
-    public Mono<PaginatedResponse> list(
+    public Mono<Page<ApartmentResponse>> list(
             @RequestParam(name = "page", defaultValue = DEFAULT_PAGE, required = false) int page,
             @RequestParam(name = "size", defaultValue = DEFAULT_SIZE, required = false) int size,
             @RequestParam(name = "building") String building

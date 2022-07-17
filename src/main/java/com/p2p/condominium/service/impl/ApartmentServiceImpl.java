@@ -4,6 +4,7 @@ import com.p2p.condominium.document.ApartmentDocument;
 import com.p2p.condominium.document.BuildingDocument;
 import com.p2p.condominium.dto.ApartmentInsertRequest;
 import com.p2p.condominium.dto.ApartmentOwnerRequest;
+import com.p2p.condominium.dto.ApartmentResponse;
 import com.p2p.condominium.dto.PaginatedResponse;
 import com.p2p.condominium.exception.BusinessException;
 import com.p2p.condominium.mapper.ApartmentMapper;
@@ -14,6 +15,8 @@ import com.p2p.condominium.repository.StackHolderRepository;
 import com.p2p.condominium.service.ApartmentService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
@@ -44,12 +47,11 @@ public class ApartmentServiceImpl implements ApartmentService {
 
 
     @Override
-    public Mono<PaginatedResponse> findAll(String building, Pageable pageable) {
+    public Mono<Page<ApartmentResponse>> findAll(String building, Pageable pageable) {
         return this.repository.countByBuilding(building)
                 .flatMap(total -> this.repository.findByBuildingOrderByFloorAscNumberAsc(building, pageable)
                         .collectList()
-                        .flatMap(list -> Mono.just(this.paginatedResponseMapper
-                                .toPaginator(this.mapper.toResponse(list), pageable.getPageNumber(), pageable.getPageSize(), total)))
+                        .flatMap(list -> Mono.just( new PageImpl<>(this.mapper.toResponse(list), pageable, total)))
                 );
     }
 
