@@ -100,19 +100,19 @@ public class StackHolderServiceImpl implements StackHolderService {
 
     private Mono<StackHolderDocument> validateDeleteCondominium(StackHolderDocument document) {
         return condominiumRepository.existsByConstructionCompanyOrCondominiumManagerManagerId(document.getId(), document.getId())
-                .flatMap(exists -> {
-                    if (!exists)
-                        return Mono.empty();
-                    return Mono.error(new BusinessException(STACKHOLDER_IN_USE_CONDOMINIUM));
-                }).thenReturn(document);
+                .flatMap(exists -> validatesExistenceOrError(exists, STACKHOLDER_IN_USE_CONDOMINIUM))
+                    .thenReturn(document);
     }
 
     private Mono<StackHolderDocument> validateDeleteApartment(StackHolderDocument document) {
         return this.apartmentRepository.existsByOwner(document.getId())
-                .flatMap(exists -> {
-                    if (!exists)
-                        return Mono.empty();
-                    return Mono.error(new BusinessException(STACKHOLDER_IN_USE_APARTMENT));
-                }).thenReturn(document);
+                .flatMap(exists -> validatesExistenceOrError(exists, STACKHOLDER_IN_USE_APARTMENT))
+                .thenReturn(document);
+    }
+
+    private Mono<Object> validatesExistenceOrError(Boolean exists, String message) {
+        if (!exists)
+            return Mono.empty();
+        return Mono.error(new BusinessException(message));
     }
 }
