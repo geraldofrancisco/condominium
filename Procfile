@@ -1,1 +1,1 @@
-web: java -jar target/condominium-0.0.1-SNAPSHOT.jar
+web: java -jar condominium-0.0.1-SNAPSHOT.jar
