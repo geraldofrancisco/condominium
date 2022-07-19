@@ -10,4 +10,4 @@ springdoc:
     path: /api-docs/swagger-ui.html
 
 server:
-  port: 8080
+  port: ${PORTA}
