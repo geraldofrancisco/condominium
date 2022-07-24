@@ -20,6 +20,7 @@ import reactor.core.publisher.Mono;
 import static com.p2p.condominium.constant.ErrorConstant.BUILDING_EXISTS_APARTMENTS_NOT_DELETE;
 import static com.p2p.condominium.constant.ErrorConstant.BUILDING_ID_NOT_EXIST;
 import static com.p2p.condominium.util.BaseDocumentUtil.insertInformation;
+import static com.p2p.condominium.util.BaseDocumentUtil.updateInformation;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Slf4j
@@ -47,7 +48,10 @@ public class BuildingServiceImpl implements BuildingService {
 
     @Override
     public Mono<BuildingDocument> update(BuildingDTO request) {
-        return null;
+        var document = this.mapper.toDocument(request);
+        updateInformation(document);
+        return this.findById(request.getId())
+                .flatMap(d -> this.repository.save(document));
     }
 
     @Override
