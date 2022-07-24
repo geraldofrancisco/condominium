@@ -16,4 +16,6 @@ public interface BuildingRepository extends ReactiveMongoRepository<BuildingDocu
     Flux<BuildingDocument> findByCondominiumOrderByName(String condominium, Pageable pageable);
 
     Mono<Boolean> existsByCondominium(String condominium);
+
+    Flux<String> findIdByCondominium(String condominium);
 }

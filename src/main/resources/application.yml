@@ -5,6 +5,7 @@ spring:
     mongodb:
       uri: mongodb+srv://condominium:62DC9G8V4RlAwqOX@condominium.qfgszpm.mongodb.net/condominio
       database: condominio
+
 springdoc:
   api-docs:
     path: /api-docs
@@ -20,3 +21,6 @@ eureka:
     fetch-registry: true
     service-url:
       defaultZone: http://localhost:8761/eureka
+
+condominium:
+  cashFundPercentage: 10

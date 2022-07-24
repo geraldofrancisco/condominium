@@ -74,4 +74,6 @@ public class CondominiumController {
     public Mono<Void> delete(@PathVariable String id) {
         return service.delete(id);
     }
+
+    //TODO: Endpoint para eleger síndico
 }
