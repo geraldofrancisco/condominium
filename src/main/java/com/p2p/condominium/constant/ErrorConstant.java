@@ -62,4 +62,9 @@ public class ErrorConstant {
     public static final String APARTMENT_DONT_INSERT = "Não é possível inserir o apartamento pois ele já está cadastrado";
     public static final String APARTMENT_BUILDING_NOT_EXISTS = "Não existe o prédio informado";
     public static final String APARTMENT_OWNER_REQUIRED = "O proprietário é obrigatório";
+
+    /**
+     * USER
+     * */
+    public static final String USER_NOT_FOUND = "Usuário ou senha inválidos";
 }

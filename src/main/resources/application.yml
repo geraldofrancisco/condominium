@@ -24,3 +24,7 @@ eureka:
 
 condominium:
   cashFundPercentage: 10
+
+jjwt:
+  secret: $2y$10$3cqgDPY2IdFj7ftsKI5O9eiQed72JvDUib761rAOTB0CTbkxgLCV2
+  expiration: 2700
