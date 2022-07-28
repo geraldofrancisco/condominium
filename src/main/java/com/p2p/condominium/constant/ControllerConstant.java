@@ -7,6 +7,7 @@ import static lombok.AccessLevel.PRIVATE;
 @NoArgsConstructor(access = PRIVATE)
 public class ControllerConstant {
 
+    public static final String V1_LOGIN = "/v1/login";
     public static final String PAGE = "page";
     public static final String SIZE = "size";
     public static final String ID = "id";

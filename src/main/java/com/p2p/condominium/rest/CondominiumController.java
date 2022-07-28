@@ -7,6 +7,7 @@ import com.p2p.condominium.mapper.CondominiumMapper;
 import com.p2p.condominium.service.CondominiumService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,6 +40,7 @@ public class CondominiumController {
 
     private final CondominiumMapper condominiumMapper;
 
+    @PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
     @GetMapping
     @ResponseStatus(OK)
     public Mono<Page<CondominiumResponse>> list(

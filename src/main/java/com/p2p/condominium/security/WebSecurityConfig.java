@@ -8,6 +8,7 @@ import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import reactor.core.publisher.Mono;
 
+import static com.p2p.condominium.constant.ControllerConstant.V1_LOGIN;
 import static org.springframework.http.HttpMethod.OPTIONS;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.HttpStatus.UNAUTHORIZED;
@@ -36,7 +37,7 @@ public class WebSecurityConfig {
                 .securityContextRepository(securityContextRepository)
                 .authorizeExchange()
                 .pathMatchers(OPTIONS).permitAll()
-                .pathMatchers("/login").permitAll()
+                .pathMatchers(V1_LOGIN).permitAll()
                 .anyExchange().authenticated()
                 .and().build();
     }

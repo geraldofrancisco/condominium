@@ -3,6 +3,7 @@ package com.p2p.condominium.service.impl;
 import com.p2p.condominium.document.UserDocument;
 import com.p2p.condominium.service.UserService;
 import lombok.AllArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
