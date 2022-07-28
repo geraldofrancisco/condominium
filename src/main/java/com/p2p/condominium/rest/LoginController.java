@@ -2,6 +2,7 @@ package com.p2p.condominium.rest;
 
 import com.p2p.condominium.dto.AuthRequest;
 import com.p2p.condominium.dto.AuthResponse;
+import com.p2p.condominium.service.LoginService;
 import com.p2p.condominium.service.UserService;
 import com.p2p.condominium.util.JWTUtil;
 import lombok.RequiredArgsConstructor;
@@ -22,15 +23,10 @@ import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 @RequiredArgsConstructor
 @Validated
 public class LoginController {
-    private final JWTUtil jwtUtil;
-    private final PasswordEncoder passwordEncoder;
-    private final UserService userService;
+    private final LoginService service;
 
     @PostMapping
-    public Mono<ResponseEntity<AuthResponse>> login(@RequestBody AuthRequest ar) {
-        return userService.findByUsername(ar.getUsername())
-                .filter(userDetails -> passwordEncoder.matches(ar.getPassword(), userDetails.getPassword()))
-                .map(userDetails -> ResponseEntity.ok(new AuthResponse(jwtUtil.generateToken(userDetails))))
-                .switchIfEmpty(Mono.just(ResponseEntity.status(UNAUTHORIZED).build()));
+    public Mono<AuthResponse> login(@RequestBody AuthRequest request) {
+        return service.login(request);
     }
 }
