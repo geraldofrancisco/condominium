@@ -30,6 +30,7 @@ public class UserDocument implements UserDetails {
     @Field("nome")
     private String name;
 
+    @Field("email")
     private String email;
 
     @Field("senha")
